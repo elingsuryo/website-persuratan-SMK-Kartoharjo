@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="src/output.css" rel="stylesheet" />
+  </head>
+  <body
+    class="overflow-hidden bg-cover bg-center"
+    style="background-image: url('src/bg1.png')"
+  >
+    <!-- Navbar -->
+    <nav class="bg-white border-gray-200" style="background-color: #325389">
+      <div
+        class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+      >
+        <a
+          href="https://flowbite.com/"
+          class="flex items-center space-x-3 rtl:space-x-reverse"
+        >
+          <img src="src/logo smk.png" class="h-8" alt="Flowbite Logo" />
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+            >SMK N Kartoharjo</span
+          >
+        </a>
+      </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="min-h-screen flex items-center justify-center">
+      <form class="max-w-sm w-full bg-white p-6 rounded-lg" id="loginform">
+        <div class="mb-5">
+          <label for="email" class="block mb-2 text-sm font-medium text-black"
+            >Email</label
+          >
+          <input
+            type="email"
+            id="email"
+            class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="name@gmail.com"
+            required
+          />
+        </div>
+        <div class="mb-5">
+          <label
+            for="password"
+            class="block mb-2 text-sm font-medium text-black"
+            >Password</label
+          >
+          <input
+            type="password"
+            id="password"
+            class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="••••••••"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          class="text-white bg-black hover:bg-neutral-950 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center cursor-pointer"
+        >
+          Login
+        </button>
+        <div class="mt-4 text-sm text-black text-center">
+          Belum Punya Akun?
+          <a
+            href="register.html"
+            class="font-medium text-black hover:underline"
+          >
+            Daftar
+          </a>
+        </div>
+      </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      // Mencegah default behavior dari form submit
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Mencegah form submit default
+
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            const response = await axios.post("/api/v1//login", {
+              email,
+              password,
+            });
+
+            const token = response.data.token;
+            const redirectTo = response.data.redirect_to;
+
+            // Menyimpan token di localStorage
+            localStorage.setItem("jwtToken", token);
+
+            // Redirect ke URL yang sesuai berdasarkan response backend
+            window.location.href = redirectTo;
+          } catch (error) {
+            console.error("Login failed", error);
+            // Menampilkan pesan error jika login gagal
+            alert("Login failed. Please check your credentials.");
+          }
+        });
+    </script>
+  </body>
+</html>
