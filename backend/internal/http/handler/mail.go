@@ -3,14 +3,15 @@ package handler
 import (
 	"net/http"
 
-	"github.com/elingsuryo/website-persuratan-SMK-Kartoharjo/internal/http/dto"
-	"github.com/elingsuryo/website-persuratan-SMK-Kartoharjo/internal/service"
-	"github.com/elingsuryo/website-persuratan-SMK-Kartoharjo/pkg/response"
+	"website-penyuratan-smk-kartoharjo/internal/http/dto"
+	"website-penyuratan-smk-kartoharjo/internal/service"
+	"website-penyuratan-smk-kartoharjo/pkg/response"
+
 	"github.com/labstack/echo/v4"
 )
 
 type MailHandler struct {
-	mailervice service.MailService
+	mailservice service.MailService
 }
 
 func NewMailHandler(mailService service.MailService) MailHandler {
@@ -18,7 +19,7 @@ func NewMailHandler(mailService service.MailService) MailHandler {
 }
 
 func (h *MailHandler) GetAllMail(ctx echo.Context) error {
-	users, err := h.mailService.GetAll(ctx.Request().Context())
+	users, err := h.mailservice.GetAll(ctx.Request().Context())
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
 	}
@@ -32,10 +33,10 @@ func (h* MailHandler) GetMail(ctx echo.Context) error{
 		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, err.Error()))
 	}
 
-mail, err := h.mailService.GetByID(ctx.Request().Context(), req.ID)
-if err != nil {
+	mail, err := h.mailservice.GetByID(ctx.Request().Context(), req.ID)
+	if err != nil {
 	return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
-}
+	}
 return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully", mail))
 
 }
@@ -46,7 +47,7 @@ func (h *MailHandler) CreateMail(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, err.Error()))
 	}
 
-	err := h.mailService.Insert(ctx.Request().Context(), req)
+	err := h.mailservice.Create(ctx.Request().Context(), req)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
 	}
@@ -61,7 +62,7 @@ func (h *MailHandler) UpdateMail(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, err.Error()))
 	}
 
-	err := h.mailService.Update(ctx.Request().Context(), req)
+	err := h.mailservice.Update(ctx.Request().Context(), req)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
 	}
@@ -75,12 +76,12 @@ func (h *MailHandler) DeleteMail(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, err.Error()))
 	}
 
-	mail,err :=  h.mailService.GetByID(ctx.Request().Context(), req.ID)
+	mail,err :=  h.mailservice.GetByID(ctx.Request().Context(), req.ID)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
 	}
 
-	err = h.mailService.Delete(ctx.Request().Context(), mail)
+	err = h.mailservice.Delete(ctx.Request().Context(), mail)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
 	}

@@ -16,6 +16,14 @@ import Register from "../views/auth/register.tsx";
 //import view login
 import Login from "../views/auth/login.tsx";
 
+import DvPersuratan from "../views/dashboard/dvPersuratan.tsx";
+
+import AdminDashboard from "../views/dashboard/admin.tsx";
+
+import HeadmasterDashboard from "../views/dashboard/headmaster.tsx";
+
+import SuratMasukDv from "../views/suratMasuk/dvPersuratan.tsx";
+
 export default function AppRoutes() {
   // Menggunakan useContext untuk mendapatkan nilai dari AuthContext
   const auth = useContext(AuthContext);
@@ -33,24 +41,53 @@ export default function AppRoutes() {
         path="/register"
         element={
           isAuthenticated ? (
-            <Navigate to="/admin/dashboard" replace />
+            auth?.user?.role === "admin" ? (
+              <Navigate to="/admin/dashboard" />
+            ) : auth?.user?.role === "headmaster" ? (
+              <Navigate to="/kepalasekolah/dashboard" />
+            ) : auth?.user?.role === "dvPersuratan" ? (
+              <Navigate to="/dvpersuratan/dashboard" />
+            ) : null
           ) : (
             <Register />
           )
         }
       />
 
+      {auth?.user?.role === "headmaster" && (
+        <Route
+          path="/kepalasekolah/dashboard"
+          element={<HeadmasterDashboard />}
+        />
+      )}
+
+      {auth?.user?.role === "admin" && (
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      )}
+
+      {auth?.user?.role === "dvPersuratan" && (
+        <Route path="/dvpersuratan/dashboard" element={<DvPersuratan />} />
+      )}
+
       {/* route "/login" */}
       <Route
         path="/login"
         element={
           isAuthenticated ? (
-            <Navigate to="/admin/dashboard" replace />
+            auth?.user?.role === "admin" ? (
+              <Navigate to="/admin/dashboard" />
+            ) : auth?.user?.role === "headmaster" ? (
+              <Navigate to="/kepalasekolah/dashboard" />
+            ) : auth?.user?.role === "dvPersuratan" ? (
+              <Navigate to="/dvpersuratan/dashboard" />
+            ) : null
           ) : (
             <Login />
           )
         }
       />
+
+      <Route path="dvpersuratan/suratmasuk" element={<SuratMasukDv />} />
     </Routes>
   );
 }

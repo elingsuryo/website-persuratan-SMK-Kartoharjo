@@ -57,6 +57,7 @@ export const Login: FC = () => {
               id: data.data.id,
               fullname: data.data.fullname,
               email: data.data.email,
+              role: data.data.role,
             })
           );
 
@@ -64,7 +65,13 @@ export const Login: FC = () => {
           setIsAuthenticated(true);
 
           // Redirect to dashboard page
-          navigate("/admin/dashboard");
+          if (data.data.role === "admin") {
+            navigate("/admin/dashboard");
+          } else if (data.data.role === "headmaster") {
+            navigate("/kepalasekolah/dashboard");
+          } else if (data.data.role === "dvPersuratan") {
+            navigate("/dvpersuratan/dashboard");
+          }
         },
         onError: (error: any) => {
           //set errors to state "errors"

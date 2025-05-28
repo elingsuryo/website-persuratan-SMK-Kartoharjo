@@ -1,0 +1,11 @@
+BEGIN;
+CREATE TABLE IF NOT EXISTS mails(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    dari VARCHAR(255) NOT NULL,
+    ke VARCHAR(255) NOT NULL,
+    file VARCHAR(255) NOT NULL,
+    date VARCHAR(255) NOT NULL,
+    signature Boolean
+);
+
+COMMIT;

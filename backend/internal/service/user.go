@@ -67,15 +67,15 @@ func (s *userService) Register(ctx context.Context, req dto.UserRegisterRequest)
 	user := new(entity.User)
 	user.Email = req.Email
 	user.FullName = req.FullName
-	user.Role = "Administrator"
+	user.Role = "headmaster"
 
-	// exist, err := s.userRepository.GetByEmail(ctx, req.Email)
-	// if err == nil && exist != nil {
-	// 	return errors.New("Email sudah terdaftar")
-	// }
-	// if err != nil {
-	// return err
-	// }
+	exist, err := s.userRepository.GetByEmail(ctx, req.Email)
+	if err == nil && exist != nil {
+		return errors.New("email sudah terdaftar")
+	}
+	if err != nil {
+	return err
+	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {

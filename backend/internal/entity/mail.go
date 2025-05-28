@@ -2,10 +2,11 @@ package entity
 
 type Mail struct {
 	ID        int64  `json:"id"`
-	To        string `json:"to"`
+	Dari      string `json:"dari"`
+	Ke        string `json:"ke"`
 	File      string `json:"file"`
+	Date      string `json:"date"`
 	Signature int64  `json:"signature"`
-	Access    int64  `json:"acc"`
 }
 
 func (Mail) TableName() string {

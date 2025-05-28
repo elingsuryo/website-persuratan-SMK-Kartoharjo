@@ -22,11 +22,10 @@ func main() {
 	checkError(err)
 	//init & start db
 	publicRoutes := builder.BuildPublicRoutes(cfg, db)
-	// privateRoutes := builder.BuildPrivateRoutes(cfg, db)
-
-
+	privateRoutes := builder.BuildPrivateRoutes(cfg, db)
+	
 	//init server
-	srv := server.NewServer(cfg, publicRoutes)
+	srv := server.NewServer(cfg, publicRoutes, privateRoutes)
 	runServer(srv, cfg.PORT)
 	waitForShutdown(srv)
 	//start server
