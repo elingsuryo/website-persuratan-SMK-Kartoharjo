@@ -34,12 +34,6 @@ func (s mailService) GetByID(ctx context.Context, id int64) (*entity.Mail, error
 	 return s.mailsRepository.GetByID(ctx, id)
 }
 
-/*************  ✨ Windsurf Command ⭐  *************/
-// Create creates a new mail
-// 
-// This function will create a new mail with req as the data source
-// and return the error if any occurred
-/*******  f732e645-f8d6-40db-890b-c8438cc22cd9  *******/
 func (s mailService) Create(ctx context.Context, req dto.CreateMailRequest) error{
 	mail := &entity.Mail{
 		Dari: req.Dari,

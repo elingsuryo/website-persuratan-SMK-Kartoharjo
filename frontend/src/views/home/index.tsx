@@ -8,6 +8,8 @@ import "../../index.css";
 
 import logo from "../../assets/logo smk.png";
 
+import bg1 from "../../assets/bg1.png";
+
 const Home: FC = () => {
   return (
     <>
@@ -40,33 +42,27 @@ const Home: FC = () => {
             </div>
           </div>
         </nav>
-        <div className="min-h-screen flex items-center bg-white px-4 sm:px-8">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-16">
-            {/* Kiri */}
-            <div className="w-full md:w-1/2 text-center md:text-left">
-              <h1 className="text-3xl md:text-4xl font-bold mb-2 text-black">
-                Selamat Datang di!
-              </h1>
-              <h2 className="text-2xl md:text-3xl font-light text-[#3a5a59] mb-4">
-                Sistem Kearsipan Surat
-              </h2>
-              <p className="text-sm md:text-base text-gray-600 max-w-md mx-auto md:mx-0 mb-6">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam
-              </p>
-            </div>
-
-            {/* Kanan */}
-            <div className="w-full md:w-1/2">
-              <img
-                src="https://storage.googleapis.com/a1aa/image/fb9dead9-b40b-48f2-a189-f828973e6ed2.jpg"
-                alt="School bus"
-                className="w-full h-64 md:h-[400px] object-cover rounded"
-              />
-            </div>
+        <div
+          className="min-h-screen bg-cover bg-center bg-no-repeat px-4 sm:px-8 flex items-center"
+          style={{
+            backgroundImage: `url(${bg1})`,
+          }}
+        >
+          <div className="max-w-7xl mx-auto text-white text-center md:text-left">
+            <h1 className="text-3xl md:text-5xl font-bold mb-4">
+              Selamat Datang di
+            </h1>
+            <h2 className="text-2xl md:text-4xl font-light mb-4">
+              Sistem Kearsipan Surat
+            </h2>
+            <p className="text-sm md:text-base max-w-xl">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam.
+            </p>
           </div>
         </div>
+
         <div className="bg-[#325389] text-white text-xl text-center py-2 mt-6">
           Powered by Tenfold
         </div>

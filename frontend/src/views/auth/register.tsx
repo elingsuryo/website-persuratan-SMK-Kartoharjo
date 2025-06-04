@@ -9,6 +9,8 @@ import { useRegister } from "../../hooks/auth/useRegister";
 
 import "../../index.css";
 
+import bg1 from "../../assets/bg1.png";
+
 //interface for validation errors
 interface ValidationErrors {
   [key: string]: string;
@@ -54,7 +56,12 @@ const Register: FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{
+        backgroundImage: `url(${bg1})`,
+      }}
+    >
       <form
         className="max-w-sm w-full bg-white p-6 rounded-lg"
         onSubmit={handleRegister}

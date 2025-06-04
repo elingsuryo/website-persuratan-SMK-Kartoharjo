@@ -13,6 +13,8 @@ import Cookies from "js-cookie";
 //import context
 import { AuthContext } from "../../context/AuthContext";
 
+import bg1 from "../../assets/bg1.png";
+
 //interface for validation errors
 interface ValidationErrors {
   [key: string]: string;
@@ -50,6 +52,9 @@ export const Login: FC = () => {
           //set token to cookie
           Cookies.set("token", data.data.token);
 
+          //set role to localStorage
+          localStorage.setItem("role", data.data.role);
+
           //set user to cookie
           Cookies.set(
             "user",
@@ -57,7 +62,6 @@ export const Login: FC = () => {
               id: data.data.id,
               fullname: data.data.fullname,
               email: data.data.email,
-              role: data.data.role,
             })
           );
 
@@ -82,7 +86,12 @@ export const Login: FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{
+        backgroundImage: `url(${bg1})`,
+      }}
+    >
       <hr />
       {errors.Error && (
         <div className="alert alert-danger mt-2 rounded-4">

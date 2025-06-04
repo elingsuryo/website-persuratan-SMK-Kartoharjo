@@ -1,28 +1,51 @@
 import "../../index.css";
 
+import SidebarMenu from "../../component/sidebarMenu";
+
 const DvPersuratan = () => {
   return (
-    <div>
-      <main className="flex-1 p-6 overflow-auto">
-        <header className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search"
-                className="px-4 py-1.5 rounded-full border border-gray-300 focus:outline-none"
-              />
-            </div>
-            <div className="flex items-center gap-3">
-              <span>📬</span>
-              <span>🔔</span>
+    <>
+      <aside className="fixed z-40 w-64 h-screen">
+        <SidebarMenu />
+      </aside>
+      <main className="flex-1 overflow-auto p-4 sm:ml-64">
+        <header className="flex mb-6 border-b w-full">
+          <div className="flex items-center justify-between w-full px-8 py-4">
+            <h1 className="text-2xl font-bold font-poppins">Surat Masuk</h1>
+            <div className="flex items-center gap-3 font-poppins font-semibold">
               <span>Divisi Surat</span>
-              <img
-                src="https://via.placeholder.com/32"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 48 48"
                 className="rounded-full w-8 h-8"
-                alt="Profile"
-              />
+              >
+                <g id="User_profile" data-name="User profile">
+                  <path
+                    d="M47 24A23 23 0 1 1 12.81 3.91 23 23 0 0 1 47 24z"
+                    fill="#374f68"
+                  />
+                  <path
+                    d="M47 24a22.91 22.91 0 0 1-8.81 18.09A22.88 22.88 0 0 1 27 45C5.28 45-4.37 17.34 12.81 3.91A23 23 0 0 1 47 24z"
+                    fill="#425b72"
+                  />
+                  <path
+                    d="M39.2 35.39a19 19 0 0 1-30.4 0 17 17 0 0 1 10.49-8.73 8.93 8.93 0 0 0 9.42 0 17 17 0 0 1 10.49 8.73z"
+                    fill="#6fabe6"
+                  />
+                  <path
+                    d="M39.2 35.39a19 19 0 0 1-4.77 4.49 19 19 0 0 1-15.13-1 7.08 7.08 0 0 1-.51-12.18c.1-.07 0-.05.5-.05a9 9 0 0 0 9.42 0 17 17 0 0 1 10.49 8.74z"
+                    fill="#82bcf4"
+                  />
+                  <path
+                    d="M33 19a9 9 0 1 1-12.38-8.34A9 9 0 0 1 33 19z"
+                    fill="#6fabe6"
+                  />
+                  <path
+                    d="M33 19a9 9 0 0 1-2.6 6.33c-9.13 3.74-16.59-7.86-9.78-14.67A9 9 0 0 1 33 19z"
+                    fill="#82bcf4"
+                  />
+                </g>
+              </svg>
             </div>
           </div>
         </header>
@@ -85,7 +108,7 @@ const DvPersuratan = () => {
           </div>
         </div>
       </main>
-    </div>
+    </>
   );
 };
 
