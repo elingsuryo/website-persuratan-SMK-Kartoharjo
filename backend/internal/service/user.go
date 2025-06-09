@@ -69,13 +69,13 @@ func (s *userService) Register(ctx context.Context, req dto.UserRegisterRequest)
 	user.FullName = req.FullName
 	user.Role = "headmaster"
 
-	exist, err := s.userRepository.GetByEmail(ctx, req.Email)
-	if err == nil && exist != nil {
-		return errors.New("email sudah terdaftar")
-	}
-	if err != nil {
-	return err
-	}
+	// exist, err := s.userRepository.GetByEmail(ctx, req.Email)
+	// if err == nil && exist != nil {
+	// 	return errors.New("email sudah terdaftar")
+	// }
+	// if err != nil {
+	// return err
+	// }
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -100,6 +100,7 @@ func (s userService) Create(ctx context.Context, req dto.UserCreateRequest) erro
 		Email: req.Email,
 		Password: req.Password,	
 		FullName: req.FullName,
+		Whatsapp: req.Whatsapp,
 		Role: req.Role,
 	}
 	exist, err := s.userRepository.GetByEmail(ctx, req.Email)
@@ -138,52 +139,12 @@ func (s userService) Update(ctx context.Context, req dto.UserUpdateRequest) erro
 		}
 		user.Password = string(hashedPassword)
 	}
+	if req.Whatsapp != "" {
+		user.Whatsapp = req.Whatsapp
+	}
 	return s.userRepository.Update(ctx, user)
 }	
 
 func (s userService) Delete(ctx context.Context, user *entity.User) error{
 	return s.userRepository.Delete(ctx, user)
 }
-
-// func (s userService) ResetPassword(ctx context.Context, req dto.ResetPasswordRequest) error {
-// 	user, err := s.userRepository.GetByResetPasswordToken(ctx, req.Token)
-// 	if err != nil {
-// 		return errors.New("token anda salah")
-// 	}
-
-// 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	user.Password = string(hashedPassword)
-// 	return s.userRepository.Update(ctx, user)
- 
-// }
-
-// func (s *userService) RequestResetPassword(ctx context.Context, email string) error {
-// 	user, err := s.userRepository.GetByemail(ctx, email)
-// 	if err != nil {
-// 		return errors.New("email tidak ditemukan")
-// 	}
-	
-
-// var replacerEmail = struct {
-// 	Token string
-// }{
-// 	Token: user.ResetPasswordToken,
-// }
-
-// var body bytes.Buffe
-// return nil
-// }
-
-// func (s *userService) VerifyEmail(ctx context.Context, req dto.VerifyEmailRequest) error {
-// 	user, err := s.userRepository.GetByVerifyEmailToken(ctx, req.Token)
-// 	if err != nil {
-// 		return errors.New("token anda salah")
-// 	}
-
-// 	user.IsVerified = 1
-// 	return s.userRepository.Update(ctx, user)
-// }

@@ -15,6 +15,7 @@ type GetAllUserResponse struct {
 	ID       int64  `json:"id"`
 	Email    string `json:"email"`
 	FullName string `json:"full_name"`
+	Whatsapp string `json:"whatsapp"`
 	Role     string `json:"role"`
 }
 
@@ -28,6 +29,7 @@ type UserUpdateRequest struct {
 	FullName string `json:"full_name" validate:"required"` //json, param movie/ I=param, query ?id_pengguna=asdsasort
 	Role     string `json:"role" validate:"required"`      //json, param movie/ I=param, query ?id_pengguna=asdsasort
 	Password string `json:"password" validate:"required"`  //json, param movie/ I=param, query ?id_pengguna=asdsasort
+	Whatsapp string `json:"whatsapp"`
 }
 
 type UserCreateRequest struct {
@@ -35,17 +37,5 @@ type UserCreateRequest struct {
 	FullName string `json:"full_name" validate:"required"` //json, param movie/ I=param, query ?id_pengguna=asdsasort
 	Role     string `json:"role" validate:"required"`      //json, param movie/ I=param, query ?id_pengguna=asdsasort
 	Password string `json:"password" validate:"required"`  //json, param movie/ I=param, query ?id_pengguna=asdsasortS
-}
-
-type RequestResetPassword struct {
-	Email string `json:"email" validate:"required"`
-}
-
-type ResetPasswordRequest struct {
-	Token    string `param:"token" validate:"required"`
-	Password string `json:"password" validate:"required"`
-}
-
-type VerifyEmailRequest struct {
-	Token string `param:"token" validate:"required"`
+	Whatsapp string `json:"whatsapp"`
 }

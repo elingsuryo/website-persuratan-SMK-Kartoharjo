@@ -1,11 +1,12 @@
 BEGIN;
 CREATE TABLE IF NOT EXISTS mails(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    dari VARCHAR(255) NOT NULL,
-    ke VARCHAR(255) NOT NULL,
+    judul VARCHAR(255) NOT NULL,
+    deskripsi VARCHAR(255) NOT NULL,
+    kategori VARCHAR(255) NOT NULL,
+    tgl_upload VARCHAR(255) NOT NULL,
     file VARCHAR(255) NOT NULL,
-    date VARCHAR(255) NOT NULL,
-    signature Boolean
+    accept Boolean
 );
 
 COMMIT;

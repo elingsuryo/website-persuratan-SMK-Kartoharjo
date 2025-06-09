@@ -36,11 +36,11 @@ func (s mailService) GetByID(ctx context.Context, id int64) (*entity.Mail, error
 
 func (s mailService) Create(ctx context.Context, req dto.CreateMailRequest) error{
 	mail := &entity.Mail{
-		Dari: req.Dari,
-		Ke: req.Ke,
-		File: req.File,	
-		Date: req.Date,
-		Signature: req.Signature,
+		Judul:     req.Judul,
+		Deskripsi: req.Deskripsi,
+		Kategori:  req.Kategori,
+		TglUpload: req.TglUpload,
+		File:      req.File,
 	}
 	return s.mailsRepository.Create(ctx, mail)
 }
@@ -50,18 +50,22 @@ func (s mailService) Update(ctx context.Context, req dto.UpdateMailRequest) erro
 	if err != nil {
 		return err
 	}
-	if req.Dari != "" {
-		mails.Dari = req.Dari
+	if req.Judul != "" {
+		mails.Judul = req.Judul
 	}
-	if req.Ke != "" {
-		mails.Ke = req.Ke
+	if req.Deskripsi != "" {
+		mails.Deskripsi = req.Deskripsi
+	}
+	if req.TglUpload != "" {
+		mails.TglUpload = req.TglUpload
 	}
 	if req.File != "" {
 		mails.File = req.File
 	}
-	if req.Date != "" {
-		mails.Date = req.Date
+	if req.Kategori != "" {
+		mails.Kategori = req.Kategori
 	}
+	
 	return s.mailsRepository.Update(ctx, mails)
 }
 

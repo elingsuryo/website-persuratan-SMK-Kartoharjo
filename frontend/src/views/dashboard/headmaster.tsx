@@ -1,9 +1,13 @@
+import SidebarMenu from "../../component/sidebarMenu";
 import "../../index.css";
 
 const HeadmasterDashboard = () => {
   return (
     <div>
-      <main className="flex-1 p-6 overflow-auto">
+      <aside className="fixed z-40 w-64 h-screen">
+        <SidebarMenu />
+      </aside>
+      <main className="flex-1 overflow-auto p-4 sm:ml-64">
         <header className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <div className="flex items-center gap-4">

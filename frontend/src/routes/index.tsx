@@ -7,6 +7,8 @@ import { AuthContext } from "../context/AuthContext";
 //import react router dom
 import { Routes, Route, Navigate } from "react-router";
 
+// import ProtectedRoute from "./protectedRoute.tsx";
+
 //import view home
 import Home from "../views/home/index.tsx";
 
@@ -30,12 +32,14 @@ import SuratMasukKS from "../views/headmaster/suratMasuk.tsx";
 
 import SuratMasukDV from "../views/dvpersuratan/suratMasuk.tsx";
 
+import EditUser from "../views/admin/editUser.tsx";
+
 export default function AppRoutes() {
   // Menggunakan useContext untuk mendapatkan nilai dari AuthContext
   const auth = useContext(AuthContext);
 
   // Menggunakan optional chaining untuk menghindari error jika auth tidak ada
-  const isAuthenticated = auth?.isAuthenticated ?? false;
+  const isAuthenticated = auth;
 
   return (
     <Routes>
@@ -49,47 +53,39 @@ export default function AppRoutes() {
         path="/register"
         element={
           isAuthenticated ? (
-            auth?.user?.role === "admin" ? (
+            auth.user?.role === "admin" ? (
               <Navigate to="/admin/dashboard" />
-            ) : auth?.user?.role === "headmaster" ? (
-              <Navigate to="/kepalasekolah/dashboard" />
-            ) : auth?.user?.role === "dvPersuratan" ? (
-              <Navigate to="/dvpersuratan/dashboard" />
-            ) : null
+            ) : (
+              <Navigate to="/" />
+            )
           ) : (
             <Register />
           )
         }
       />
 
-      <Route
-        path="/kepalasekolah/dashboard"
-        element={<HeadmasterDashboard />}
-      />
-
+      <Route path="/kepalasekolah/suratmasuk" element={<SuratMasukKS />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
       <Route path="/dvpersuratan/dashboard" element={<DvPersuratan />} />
 
       <Route path="/kepalasekolah/suratmasuk" element={<SuratMasukKS />} />
 
+      <Route path="/admin/tambah-user" element={<EditUser />} />
+
       {/* route "/login" */}
       <Route
         path="/login"
         element={
           isAuthenticated ? (
-            auth?.user?.role === "admin" ? (
-              <Navigate to="/admin/dashboard" />
-            ) : auth?.user?.role === "headmaster" ? (
-              <Navigate to="/kepalasekolah/dashboard" />
-            ) : auth?.user?.role === "dvPersuratan" ? (
-              <Navigate to="/dvpersuratan/dashboard" />
-            ) : null
+            <Navigate to="/kepalasekolah/dashboard" />
           ) : (
             <Login />
           )
         }
       />
+
+      <Route path="/headmaster/dashboard" element={<HeadmasterDashboard />} />
 
       <Route path="/dvpersuratan/uploadsurat" element={<UpSurat />} />
 

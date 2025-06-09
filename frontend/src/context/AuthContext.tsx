@@ -28,7 +28,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     !!Cookies.get("token")
   );
-  const [user, setUser] = useState<User | null>(null);
+  const initialRole = localStorage.getItem("role") as User["role"] | null;
+  const [user, setUser] = useState<User | null>(
+    initialRole ? { role: initialRole } : null
+  );
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -38,7 +41,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsAuthenticated(!!Cookies.get("token"));
     };
 
-    if (token && storedRole) {
+    const validRoles = ["admin", "headmaster", "dvPersuratan"];
+    if (token && storedRole && validRoles.includes(storedRole)) {
       setUser({ role: storedRole as User["role"] });
     }
 
