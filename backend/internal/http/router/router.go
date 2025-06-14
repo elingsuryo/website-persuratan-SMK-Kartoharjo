@@ -35,40 +35,41 @@ func PublicRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandl
 			Handler: userHandler.GetUsers,
 			Roles: allRoles,
 		},
-	}
-}
-
-func PrivateRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandler) []route.Route{
-	return []route.Route{
-		{
-			Method: http.MethodGet,
-			Path: "/users/:id",
-			Handler: userHandler.GetByID,
-			Roles: adminOnly,
-		},
 		{
 			Method: http.MethodPost,
 			Path: "/users",
 			Handler: userHandler.CreateUser,
-			Roles: adminOnly,
+			Roles: allRoles,
+		},
+			{
+			Method: http.MethodGet,
+			Path: "/users/:id",
+			Handler: userHandler.GetByID,
+			Roles: allRoles,
 		},
 		{
 			Method: http.MethodPut,
 			Path: "/users/:id",
 			Handler: userHandler.UpdateUser,
-			Roles: adminOnly,
+			Roles: allRoles,
 		},
 		{
 			Method: http.MethodDelete,
 			Path: "/users/:id",
 			Handler: userHandler.DeleteUser,
-			Roles: adminOnly,
+			Roles: allRoles,
 		},
+	}
+}
+
+func PrivateRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandler) []route.Route{
+	return []route.Route{
+	
 		{
 			Method: http.MethodGet,
 			Path: "/mails",
 			Handler: mailHandler.GetAllMail,
-			Roles: allRoles,
+			Roles: adminOnly,
 		},
 		{
 			Method: http.MethodPost,

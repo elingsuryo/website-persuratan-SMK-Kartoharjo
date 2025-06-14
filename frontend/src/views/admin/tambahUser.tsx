@@ -1,61 +1,45 @@
 import "../../index.css";
 import SidebarMenu from "../../component/sidebarMenu";
-import { useMailCreate } from "../../hooks/mail/useMailCreate";
+
 import { FormEvent, useState } from "react";
 import { Navigate } from "react-router";
+import { useUserCreate } from "../../hooks/user/useUserCreate";
 
 interface ValidationErrors {
   [key: string]: string;
 }
 
-const DvPersuratan = () => {
-  const [judul, setJudul] = useState<string>("");
-  const [deskripsi, setDeskripsi] = useState<string>("");
-  const [kategori, setKategori] = useState<string>("");
-  const [tgl_upload, setTglUpload] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
+const TambahUser = () => {
+  //define state user
+  const [full_name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [whatsapp, setWhatsapp] = useState<string>("");
+  const [role, setRole] = useState<string>("");
 
-  const fileToBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
-
+  //define state errors
   const [errors, setErrors] = useState<ValidationErrors>({});
 
   // Inisialisasi useUserCreate
-  const { mutate } = useMailCreate();
+  const { mutate, isPending } = useUserCreate();
 
   // Handle submit form
-  const storeMail = async (e: FormEvent) => {
+  const storeUser = async (e: FormEvent) => {
     e.preventDefault();
-
-    let base64File: string | undefined = undefined;
-
-    if (file) {
-      try {
-        base64File = await fileToBase64(file);
-      } catch (err) {
-        console.error("Gagal konversi file ke base64", err);
-        return;
-      }
-    }
 
     // Call the user create mutation
     mutate(
       {
-        judul,
-        deskripsi,
-        kategori,
-        tgl_upload,
-        file: base64File,
+        full_name,
+        email,
+        whatsapp,
+        password,
+        role,
       },
       {
         onSuccess: () => {
           // Redirect to users index
-          <Navigate to="/dvpersuratan/suratmasuk" />;
+          <Navigate to="/admin/kelola-user" />;
         },
         onError: (error: any) => {
           //set errors to state "errors"
@@ -74,9 +58,9 @@ const DvPersuratan = () => {
         <div className="flex-1 overflow-auto p-4 sm:ml-64">
           <header className="flex mb-6 border-b w-full">
             <div className="flex items-center justify-between w-full px-8 py-4">
-              <h1 className="text-2xl font-bold font-poppins">Surat Masuk</h1>
+              <h1 className="text-2xl font-bold font-poppins">Kelola kontak</h1>
               <div className="flex items-center gap-3 font-poppins font-semibold">
-                <span>Divisi Surat</span>
+                <span>Admin</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 48 48"
@@ -114,22 +98,80 @@ const DvPersuratan = () => {
           </header>
           <div className="bg-white drop-shadow-xl shadow-black shadow- rounded-md p-6 w-[90%] m-auto">
             <div className="mb-4  border-b border-solid">
-              <p className="mb-2 text-2xl font-bold">Tambah Dokumen</p>
+              <p className="mb-2 text-2xl font-bold">Tambah Kontak</p>
             </div>
-            <form onSubmit={storeMail}>
+            <form onSubmit={storeUser}>
               <div className="grid grid-cols-12 items-center gap-4 mb-4">
                 <label
                   className="col-span-2 text-base font-normal text-black"
                   htmlFor="nomorSurat"
                 >
-                  Judul Dokumen
+                  Nama
                 </label>
                 <input
                   type="text"
-                  value={judul}
-                  onChange={(e) => setJudul(e.target.value)}
+                  value={full_name}
+                  onChange={(e) => setName(e.target.value)}
                   className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Masukkan Judul Dokumen"
+                  placeholder="Masukkan Nama"
+                />
+                {errors.Full_name && (
+                  <div className="alert alert-danger mt-2 rounded-4">
+                    {errors.Full_name}
+                  </div>
+                )}
+              </div>
+              <div className="grid grid-cols-12 items-center gap-4 mb-4">
+                <label
+                  className="col-span-2 text-base font-normal text-black"
+                  htmlFor="nomorSurat"
+                >
+                  Email
+                </label>
+                <input
+                  type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Masukkan Email"
+                />
+                {errors.Full_name && (
+                  <div className="alert alert-danger mt-2 rounded-4">
+                    {errors.Full_name}
+                  </div>
+                )}
+              </div>
+              <div className="grid grid-cols-12 items-center gap-4 mb-4">
+                <label
+                  className="col-span-2 text-base font-normal text-black"
+                  htmlFor="nomorSurat"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {errors.Full_name && (
+                  <div className="alert alert-danger mt-2 rounded-4">
+                    {errors.Full_name}
+                  </div>
+                )}
+              </div>
+              <div className="grid grid-cols-12 items-center gap-4 mb-4">
+                <label
+                  className="col-span-2 text-base font-normal text-black"
+                  htmlFor="pengirim"
+                >
+                  Whatsapp
+                </label>
+                <input
+                  type="text"
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div className="grid grid-cols-12 items-center gap-4 mb-4">
@@ -137,86 +179,27 @@ const DvPersuratan = () => {
                   className="col-span-2 text-base font-normal text-black"
                   htmlFor="pengirim"
                 >
-                  Deskripsi
-                </label>
-                <textarea
-                  rows={4}
-                  value={deskripsi}
-                  onChange={(e) => setDeskripsi(e.target.value)}
-                  className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Masukkan deskripsi"
-                />
-              </div>
-              <div className="grid grid-cols-12 items-center gap-4 mb-4">
-                <label
-                  className="col-span-2 text-base font-normal text-black"
-                  htmlFor="pengirim"
-                >
-                  Kategori
-                </label>
-                <select
-                  value={kategori}
-                  onChange={(e) => setKategori(e.target.value)}
-                  className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option disabled selected>
-                    pilih opsi
-                  </option>
-                  <option value={"Surat Masuk"}>Surat Masuk</option>
-                  <option value={"Surat Keluar"}>Surat Keluar</option>
-                </select>
-              </div>
-              <div className="grid grid-cols-12 items-center gap-4 mb-4">
-                <label
-                  className="col-span-2 text-base font-normal text-black"
-                  htmlFor="tanggal"
-                >
-                  Tanggal Masuk
+                  Role
                 </label>
                 <input
-                  type="date"
-                  value={tgl_upload}
-                  onChange={(e) => setTglUpload(e.target.value)}
+                  type="text"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
                   className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="grid grid-cols-12 items-center gap-4 mb-12">
-                <label
-                  className="col-span-2 text-base font-normal text-black"
-                  htmlFor="file"
-                >
-                  File
-                </label>
-                <label
-                  htmlFor="file-upload"
-                  className="col-span-2 flex items-center gap-2 bg-[#0DC300] hover:bg-green-600 text-white font-semibold rounded-md py-2 px-4 cursor-pointer select-none"
-                >
-                  <svg
-                    width="21"
-                    height="21"
-                    viewBox="0 0 21 21"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M9.625 14V6.86875L7.35 9.14375L6.125 7.875L10.5 3.5L14.875 7.875L13.65 9.14375L11.375 6.86875V14H9.625ZM5.25 17.5C4.76875 17.5 4.35677 17.3286 4.01406 16.9859C3.67135 16.6432 3.5 16.2312 3.5 15.75V13.125H5.25V15.75H15.75V13.125H17.5V15.75C17.5 16.2312 17.3286 16.6432 16.9859 16.9859C16.6432 17.3286 16.2312 17.5 15.75 17.5H5.25Z"
-                      fill="white"
-                    />
-                  </svg>
-                  upload file
-                </label>
-                <input
-                  accept="application/pdf"
-                  type="file"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="hidden"
                 />
               </div>
               <button
                 type="submit"
                 className="bg-[#325389] text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+                disabled={isPending}
               >
-                Upload
+                {isPending ? "Menambahkan..." : "Tambah Kontak"}
+              </button>
+              <button
+                type="submit"
+                className="bg-[#E80004] text-white m-4 px-9 py-2 rounded-md hover:bg-red-700 transition"
+              >
+                Batal
               </button>
             </form>
           </div>
@@ -226,4 +209,4 @@ const DvPersuratan = () => {
   );
 };
 
-export default DvPersuratan;
+export default TambahUser;

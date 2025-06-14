@@ -1,7 +1,11 @@
 package handler
 
 import (
+	"fmt"
+	"io"
 	"net/http"
+	"os"
+	"time"
 
 	"website-penyuratan-smk-kartoharjo/internal/http/dto"
 	"website-penyuratan-smk-kartoharjo/internal/service"
@@ -42,18 +46,55 @@ return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully", mail))
 }
 
 func (h *MailHandler) CreateMail(ctx echo.Context) error {
-	var req dto.CreateMailRequest
-	if err := ctx.Bind(&req); err != nil {
-		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, err.Error()))
+	// Ambil form values
+	judul := ctx.FormValue("judul")
+	deskripsi := ctx.FormValue("deskripsi")
+	kategori := ctx.FormValue("kategori")
+	tglUpload := ctx.FormValue("tgl_upload")
+
+	// Ambil file dari form
+	formFile, err := ctx.FormFile("file")
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, "file is required"))
 	}
 
-	err := h.mailservice.Create(ctx.Request().Context(), req)
+	// Buka file dan simpan ke folder "uploads"
+	src, err := formFile.Open()
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, "failed to open uploaded file"))
+	}
+	defer src.Close()
+
+	os.MkdirAll("uploads", os.ModePerm)
+	// Buat nama file unik
+	filename := fmt.Sprintf("%d_%s", time.Now().Unix(), formFile.Filename)
+	filePath := "uploads/" + filename
+
+	dst, err := os.Create(filePath)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, "failed to save uploaded file"))
+	}
+	defer dst.Close()
+
+	if _, err := io.Copy(dst, src); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, "failed to copy uploaded file"))
+	}
+
+	// Kirim ke service
+	req := dto.CreateMailRequest{
+		Judul:     judul,
+		Deskripsi: deskripsi,
+		Kategori:  kategori,
+		TglUpload: tglUpload,
+		File:      filePath, // hanya path-nya
+	}
+
+	err = h.mailservice.Create(ctx.Request().Context(), req)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
 	}
 
-	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully", nil))
-
+	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully uploaded", nil))
 }
 
 func (h *MailHandler) UpdateMail(ctx echo.Context) error {

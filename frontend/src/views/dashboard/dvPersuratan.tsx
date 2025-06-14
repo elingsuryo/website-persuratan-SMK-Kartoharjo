@@ -50,59 +50,100 @@ const DvPersuratan = () => {
           </div>
         </header>
 
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="p-4 bg-white rounded-xl shadow text-center">
-            <p className="text-3xl font-bold text-red-600">9</p>
-            <p className="text-sm">Ditolak</p>
-          </div>
-          <div className="p-4 bg-white rounded-xl shadow text-center">
-            <p className="text-3xl font-bold text-yellow-500">5</p>
-            <p className="text-sm">Diproses</p>
-          </div>
-          <div className="p-4 bg-white rounded-xl shadow text-center">
-            <p className="text-3xl font-bold text-green-600">4</p>
-            <p className="text-sm">Selesai</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          <div className="col-span-2 p-4 bg-white rounded-xl shadow">
-            <h2 className="font-semibold mb-2">Kategori</h2>
-
-            <div className="w-full h-64 bg-gray-100 flex items-center justify-center rounded">
-              <p>Chart Placeholder</p>
-            </div>
-            <div className="flex justify-around mt-4 text-sm text-gray-600">
-              <span className="text-blue-900">■ Surat A</span>
-              <span className="text-blue-700">■ Surat B</span>
-              <span className="text-blue-500">■ Surat C</span>
-              <span className="text-blue-300">■ Surat D</span>
-            </div>
-          </div>
-
-          <div className="p-4 bg-white rounded-xl shadow overflow-y-auto">
-            <h2 className="font-semibold mb-2">Filter</h2>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between border rounded-xl p-2">
-                <div>
-                  <p className="font-semibold">Surat B</p>
-                  <p className="text-xs text-gray-500">Saving Funds #B</p>
+        <div className="grid grid-cols-5 grid-rows-5 gap-4 p-4">
+          {/* div1: kolom 1–3, baris 1–2 */}
+          <div className="col-span-3 row-span-2 bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between">
+            <div className="grid grid-cols-3 gap-4">
+              {/* Ditolak */}
+              <div className="text-center">
+                <div className="text-4xl font-bold text-black">9</div>
+                <div className="mt-4">
+                  <span className="inline-block bg-red-600 text-white px-6 py-2 rounded-lg text-sm font-semibold">
+                    Ditolak
+                  </span>
                 </div>
-                <div className="text-green-600 text-sm">Selesai</div>
               </div>
-              <div className="flex items-center justify-between border rounded-xl p-2">
-                <div>
-                  <p className="font-semibold">Surat A</p>
-                  <p className="text-xs text-gray-500">Emergency #D</p>
+
+              {/* Diproses */}
+              <div className="text-center">
+                <div className="text-4xl font-bold text-black">5</div>
+                <div className="mt-4">
+                  <span className="inline-block bg-yellow-400 text-white px-6 py-2 rounded-lg text-sm font-semibold">
+                    Diproses
+                  </span>
                 </div>
-                <div className="text-green-600 text-sm">Selesai</div>
               </div>
-              <div className="flex items-center justify-between border rounded-xl p-2">
-                <div>
-                  <p className="font-semibold">Surat C</p>
-                  <p className="text-xs text-gray-500">Saving Funds #A</p>
+
+              {/* Selesai */}
+              <div className="text-center">
+                <div className="text-4xl font-bold text-black">4</div>
+                <div className="mt-4">
+                  <span className="inline-block bg-green-500 text-white px-6 py-2 rounded-lg text-sm font-semibold">
+                    Selesai
+                  </span>
                 </div>
-                <div className="text-yellow-500 text-sm">Diproses</div>
+              </div>
+            </div>
+          </div>
+
+          {/* div2: kolom 1–3, baris 3–4 */}
+          <div className="col-span-3 row-span-2 bg-white rounded-2xl shadow-lg p-6 flex justify-between items-center">
+            <div>
+              <p className="font-semibold text-lg">Tambah Dokumen</p>
+              <div className="border-b border-black w-64 my-2"></div>
+              <p className="text-sm text-gray-400">upload file dokumen</p>
+            </div>
+
+            <div className="w-20 h-20 bg-[#325389] rounded-full flex items-center justify-center">
+              <svg
+                width="60"
+                height="60"
+                viewBox="0 0 60 60"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M35 5H15C13.6739 5 12.4021 5.52678 11.4645 6.46447C10.5268 7.40215 10 8.67392 10 10V50C10 51.3261 10.5268 52.5979 11.4645 53.5355C12.4021 54.4732 13.6739 55 15 55H45C46.3261 55 47.5979 54.4732 48.5355 53.5355C49.4732 52.5979 50 51.3261 50 50V20M35 5L50 20M35 5V20H50M30 45V30M22.5 37.5H37.5"
+                  stroke="white"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* div3: kolom 4–5, baris 1–4 */}
+          <div className="col-span-2 row-span-4 bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-start">
+            <div className="grid grid-cols-3 gap-4">
+              {/* Ditolak */}
+              <div className="text-center">
+                <div className="text-4xl font-bold text-black">9</div>
+                <div className="mt-4">
+                  <span className="inline-block bg-red-600 text-white px-6 py-2 rounded-lg text-sm font-semibold">
+                    Ditolak
+                  </span>
+                </div>
+              </div>
+
+              {/* Diproses */}
+              <div className="text-center">
+                <div className="text-4xl font-bold text-black">5</div>
+                <div className="mt-4">
+                  <span className="inline-block bg-yellow-400 text-white px-6 py-2 rounded-lg text-sm font-semibold">
+                    Diproses
+                  </span>
+                </div>
+              </div>
+
+              {/* Selesai */}
+              <div className="text-center">
+                <div className="text-4xl font-bold text-black">4</div>
+                <div className="mt-4">
+                  <span className="inline-block bg-green-500 text-white px-6 py-2 rounded-lg text-sm font-semibold">
+                    Selesai
+                  </span>
+                </div>
               </div>
             </div>
           </div>

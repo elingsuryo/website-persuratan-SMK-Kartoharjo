@@ -7,7 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 //import react router dom
 import { Routes, Route, Navigate } from "react-router";
 
-// import ProtectedRoute from "./protectedRoute.tsx";
+import ProtectedRoute from "./protectedRoute.tsx";
 
 //import view home
 import Home from "../views/home/index.tsx";
@@ -32,14 +32,17 @@ import SuratMasukKS from "../views/headmaster/suratMasuk.tsx";
 
 import SuratMasukDV from "../views/dvpersuratan/suratMasuk.tsx";
 
+import SuratKeluarDV from "../views/dvpersuratan/suratKeluar.tsx";
+
+import TambahUser from "../views/admin/tambahUser.tsx";
+
 import EditUser from "../views/admin/editUser.tsx";
 
 export default function AppRoutes() {
   // Menggunakan useContext untuk mendapatkan nilai dari AuthContext
   const auth = useContext(AuthContext);
 
-  // Menggunakan optional chaining untuk menghindari error jika auth tidak ada
-  const isAuthenticated = auth;
+  const isAuthenticated = auth?.isAuthenticated ?? false;
 
   return (
     <Routes>
@@ -51,17 +54,7 @@ export default function AppRoutes() {
       {/* route "/register" */}
       <Route
         path="/register"
-        element={
-          isAuthenticated ? (
-            auth.user?.role === "admin" ? (
-              <Navigate to="/admin/dashboard" />
-            ) : (
-              <Navigate to="/" />
-            )
-          ) : (
-            <Register />
-          )
-        }
+        element={isAuthenticated ? <Navigate to="/login" /> : <Register />}
       />
 
       <Route path="/kepalasekolah/suratmasuk" element={<SuratMasukKS />} />
@@ -69,9 +62,24 @@ export default function AppRoutes() {
 
       <Route path="/dvpersuratan/dashboard" element={<DvPersuratan />} />
 
-      <Route path="/kepalasekolah/suratmasuk" element={<SuratMasukKS />} />
+      {/* <Route path="/kepalasekolah/suratmasuk" element={<SuratMasukKS />} /> */}
 
-      <Route path="/admin/tambah-user" element={<EditUser />} />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="/admin/tambah-user" element={<TambahUser />} />
+
+      <Route
+        path="
+      "
+        element={<EditUser />}
+      />
 
       {/* route "/login" */}
       <Route
@@ -85,11 +93,20 @@ export default function AppRoutes() {
         }
       />
 
-      <Route path="/headmaster/dashboard" element={<HeadmasterDashboard />} />
+      <Route
+        path="/kepalasekolah/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["headmaster"]}>
+            <HeadmasterDashboard />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="/dvpersuratan/uploadsurat" element={<UpSurat />} />
 
       <Route path="/dvpersuratan/suratmasuk" element={<SuratMasukDV />} />
+
+      <Route path="/dvpersuratan/suratkeluar" element={<SuratKeluarDV />} />
     </Routes>
   );
 }

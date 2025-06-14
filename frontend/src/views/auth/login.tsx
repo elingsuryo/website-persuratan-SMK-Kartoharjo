@@ -62,6 +62,7 @@ export const Login: FC = () => {
               id: data.data.id,
               fullname: data.data.fullname,
               email: data.data.email,
+              role: data.data.role,
             })
           );
 

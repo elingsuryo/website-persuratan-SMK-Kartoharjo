@@ -8,19 +8,20 @@ import Api from "../../services/api";
 // import Cookies from "js-cookie";
 
 //interface User
-export interface User {
+export interface Mail {
   id: number;
-  email: string;
-  full_name: string;
-  whatsapp: string;
-  role: string;
+  judul: string;
+  deskripsi: string;
+  kategori: string;
+  tgl_upload: string;
+  file: string;
 }
 
-//hook useUserById dengan parameter id dan return type User
-export const useUserById = (id: number) => {
-  return useQuery<User, Error>({
-    //query key, disesuaikan dengan ID user untuk caching
-    queryKey: ["user", id],
+//hook useMailById dengan parameter id dan return type Mail
+export const useMailById = (id: number) => {
+  return useQuery<Mail, Error>({
+    //query key, disesuaikan dengan ID Mail untuk caching
+    queryKey: ["mail", id],
 
     //query function
     queryFn: async () => {
@@ -30,10 +31,10 @@ export const useUserById = (id: number) => {
       //get user by id from api
       //
 
-      const response = await Api.get(`/api/v1/users/${id}`);
+      const response = await Api.get(`/api/v1/mails/${id}`);
 
       //return data
-      return response.data.data as User;
+      return response.data.data as Mail;
     },
   });
 };

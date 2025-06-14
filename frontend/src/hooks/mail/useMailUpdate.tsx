@@ -8,23 +8,24 @@ import Api from "../../services/api";
 // import Cookies from "js-cookie";
 
 //interface UserRequest untuk update
-interface UserRequest {
-  email?: string;
-  full_name?: string;
-  whatsapp?: string;
-  role?: string;
+interface MailRequest {
+  judul?: string;
+  deskripsi?: string;
+  kategori?: string;
+  tgl_upload?: string;
+  file?: string;
 }
 
-// Hook untuk update user
-export const useUserUpdate = () => {
+// Hook untuk update Mail
+export const useMailUpdate = () => {
   return useMutation({
-    // Mutation untuk update user
-    mutationFn: async ({ id, data }: { id: number; data: UserRequest }) => {
+    // Mutation untuk update Mail
+    mutationFn: async ({ id, data }: { id: number; data: MailRequest }) => {
       // Ambil token dari cookies
       // const token = Cookies.get("token");
 
       // Gunakan service API untuk melakukan update user
-      const response = await Api.put(`/api/v1/users/${id}`, data);
+      const response = await Api.put(`/api/v1/mails/${id}`, data);
 
       // Mengembalikan response data
       return response.data;

@@ -12,7 +12,8 @@ export interface User {
   // whatsapp: number;
   id: number;
   full_name: string;
-  email: string;
+  whatsapp: string;
+  role: string;
 }
 
 //hook useUsers dengan return type User

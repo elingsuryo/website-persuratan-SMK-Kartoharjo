@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, ReactNode } from "react";
 import Cookies from "js-cookie";
 
 interface User {
-  role: "admin" | "headmaster" | "dvPersuratan";
+  role: string;
 }
 
 // Menentukan tipe dari context value

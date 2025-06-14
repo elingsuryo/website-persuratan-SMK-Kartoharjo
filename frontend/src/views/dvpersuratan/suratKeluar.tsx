@@ -6,31 +6,16 @@ import SidebarMenu from "../../component/sidebarMenu";
 
 import { useUsers, User } from "../../hooks/user/useUsers";
 
-import { useUserDelete } from "../../hooks/user/useUserDelete";
-import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router";
 
-const KelolaUser: FC = () => {
+const suratKeluar: FC = () => {
   const { data: users } = useUsers();
 
   //initialize useQueryClient
-  const queryClient = useQueryClient();
 
   //initialize useUserDelete
-  const { mutate, isPending } = useUserDelete();
 
   //handle delete user
-  const handleDelete = (id: number) => {
-    if (confirm("Are you sure you want to delete this user?")) {
-      //call useUserDelete
-      mutate(id, {
-        onSuccess: () => {
-          //refetch data
-          queryClient.invalidateQueries({ queryKey: ["users"] });
-        },
-      });
-    }
-  };
 
   return (
     <div className="top-0 z-50 w-full">
@@ -175,39 +160,18 @@ const KelolaUser: FC = () => {
                       className="focus:outline-none flex items-center gap-2 text-white bg-[#0DC300] hover:bg-[#7dc878] focus:ring-4 focus:ring-green-300 font-small rounded-lg text-sm px-5 py-2.5 me-1 mb-2 dark:bg-[#0DC300] dark:hover:bg-[#7dc878] dark:focus:ring-green-800"
                     >
                       <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="M0.5 15.5V11.9583L11.5 0.979167C11.6667 0.826389 11.8507 0.708333 12.0521 0.625C12.2535 0.541667 12.4653 0.5 12.6875 0.5C12.9097 0.5 13.125 0.541667 13.3333 0.625C13.5417 0.708333 13.7222 0.833333 13.875 1L15.0208 2.16667C15.1875 2.31944 15.309 2.5 15.3854 2.70833C15.4618 2.91667 15.5 3.125 15.5 3.33333C15.5 3.55556 15.4618 3.76736 15.3854 3.96875C15.309 4.17014 15.1875 4.35417 15.0208 4.52083L4.04167 15.5H0.5ZM12.6667 4.5L13.8333 3.33333L12.6667 2.16667L11.5 3.33333L12.6667 4.5Z"
+                          d="M9.99984 6.66663C11.6387 6.66663 13.2533 6.99649 14.8436 7.65621C16.4339 8.31593 17.8471 9.30552 19.0832 10.625C19.2498 10.7916 19.3332 10.9861 19.3332 11.2083C19.3332 11.4305 19.2498 11.625 19.0832 11.7916L17.1665 13.6666C17.0137 13.8194 16.8366 13.9027 16.6353 13.9166C16.4339 13.9305 16.2498 13.875 16.0832 13.75L13.6665 11.9166C13.5554 11.8333 13.4721 11.7361 13.4165 11.625C13.3609 11.5138 13.3332 11.3888 13.3332 11.25V8.87496C12.8054 8.70829 12.2637 8.57635 11.7082 8.47913C11.1526 8.3819 10.5832 8.33329 9.99984 8.33329C9.4165 8.33329 8.84706 8.3819 8.2915 8.47913C7.73595 8.57635 7.19428 8.70829 6.6665 8.87496V11.25C6.6665 11.3888 6.63873 11.5138 6.58317 11.625C6.52761 11.7361 6.44428 11.8333 6.33317 11.9166L3.9165 13.75C3.74984 13.875 3.56581 13.9305 3.36442 13.9166C3.16303 13.9027 2.98595 13.8194 2.83317 13.6666L0.916504 11.7916C0.749837 11.625 0.666504 11.4305 0.666504 11.2083C0.666504 10.9861 0.749837 10.7916 0.916504 10.625C2.13873 9.30552 3.54845 8.31593 5.14567 7.65621C6.74289 6.99649 8.36095 6.66663 9.99984 6.66663Z"
                           fill="white"
                         />
                       </svg>
-                      Edit Data
-                    </button>
-                    <br />
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(user.id)}
-                      disabled={isPending}
-                      className="focus:outline-none flex items-center gap-2 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-small rounded-lg text-sm px-5 py-2.5 me-1 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                    >
-                      <svg
-                        width="16"
-                        height="18"
-                        viewBox="0 0 16 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M3.41663 17.25C2.91246 17.25 2.48086 17.0705 2.12183 16.7115C1.76281 16.3524 1.58329 15.9208 1.58329 15.4167V3.5H0.666626V1.66667H5.24996V0.75H10.75V1.66667H15.3333V3.5H14.4166V15.4167C14.4166 15.9208 14.2371 16.3524 13.8781 16.7115C13.5191 17.0705 13.0875 17.25 12.5833 17.25H3.41663ZM5.24996 13.5833H7.08329V5.33333H5.24996V13.5833ZM8.91663 13.5833H10.75V5.33333H8.91663V13.5833Z"
-                          fill="#FEF7FF"
-                        />
-                      </svg>
-                      {isPending ? "Menghapus..." : "Hapus Data"}
+                      <Link to={"https://wa.me/" + user.whatsapp}>Hubungi</Link>
                     </button>
                   </td>
                 </tr>
@@ -220,4 +184,4 @@ const KelolaUser: FC = () => {
   );
 };
 
-export default KelolaUser;
+export default suratKeluar;
