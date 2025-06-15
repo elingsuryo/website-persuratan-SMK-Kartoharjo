@@ -28,7 +28,7 @@ export const Login: FC = () => {
   const { mutate, isPending } = useLogin();
 
   //destruct auth context "setIsAuthenticated"
-  const { setIsAuthenticated } = useContext(AuthContext)!;
+  const { setIsAuthenticated, setUser } = useContext(AuthContext)!;
 
   //define state
   const [email, setEmail] = useState<string>("");
@@ -49,9 +49,9 @@ export const Login: FC = () => {
       },
       {
         onSuccess: (data: any) => {
+          console.log("Login response:", data.data);
           //set token to cookie
           Cookies.set("token", data.data.token);
-
           //set role to localStorage
           localStorage.setItem("role", data.data.role);
 
@@ -66,23 +66,16 @@ export const Login: FC = () => {
             })
           );
 
+          //set user to localStorage
           //set isAuthenticated to true
           setIsAuthenticated(true);
+          setUser({
+            role: data.data.role,
+          });
+          console.log("Role:", data.data.role);
 
           // Redirect to dashboard page
-          const roleRoutes: Record<string, string> = {
-            admin: "/admin/dashboard",
-            headmaster: "/kepalasekolah/dashboard",
-            dvPersuratan: "/dvpersuratan/dashboard",
-          };
-
-          const route = roleRoutes[data.data.role];
-
-          if (route) {
-            navigate(route);
-          } else {
-            navigate("/unauthorized");
-          }
+          navigate(`/${data.data.role.toLowerCase()}/dashboard`);
         },
         onError: (error: any) => {
           //set errors to state "errors"
@@ -152,7 +145,6 @@ export const Login: FC = () => {
             </div>
           )}
         </div>
-
         <button
           type="submit"
           className="text-white bg-black hover:bg-neutral-950 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center cursor-pointer"

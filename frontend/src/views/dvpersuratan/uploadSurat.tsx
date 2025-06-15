@@ -203,14 +203,12 @@ const DvPersuratan = () => {
                       fill="white"
                     />
                   </svg>
-                  upload file
+                  <input
+                    accept="application/pdf"
+                    type="file"
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  />
                 </label>
-                <input
-                  accept="application/pdf"
-                  type="file"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="hidden"
-                />
               </div>
               <button
                 type="submit"

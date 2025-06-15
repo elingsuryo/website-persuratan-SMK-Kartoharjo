@@ -1,7 +1,10 @@
 import React from "react";
 import "../index.css";
+import { useLogout } from "../hooks/auth/useLogout";
+import { Link } from "react-router";
 
 const sidebarMenu: React.FC = () => {
+  const logout = useLogout();
   return (
     <div className="w-[251px] h-[832px] bg-[#32538a] flex flex-col text-white select-none">
       <div className="p-6 border-[#2a4773] flex justify-center">
@@ -64,7 +67,9 @@ const sidebarMenu: React.FC = () => {
                 <option className="ms-3" disabled selected>
                   Kearsipan Surat
                 </option>
-                <option>Surat Masuk</option>
+                <option>
+                  <Link to="/dvpersuratan/suratmasuk">Surat Masuk</Link>
+                </option>
                 <option>Surat Keluar</option>
               </select>
             </li>
@@ -97,7 +102,7 @@ const sidebarMenu: React.FC = () => {
           </p>
           <ul className="space-y-2 font-medium mt-3">
             <a
-              href="#"
+              onClick={logout}
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <svg
@@ -112,7 +117,7 @@ const sidebarMenu: React.FC = () => {
                   fill="white"
                 />
               </svg>
-              <span className="ms-3">My Profile</span>
+              <span className="ms-3">Log Out</span>
             </a>
           </ul>
         </div>

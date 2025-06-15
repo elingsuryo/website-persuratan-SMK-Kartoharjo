@@ -36,7 +36,11 @@ func (h *UserHandler) Login(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
 	}
 
-	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully login", map[string]string{"token": token}))
+	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully login", map[string]string{
+	"role":  claims.Role,
+		"token": token,
+}))
+
 }
 
 func (h *UserHandler) Register(ctx echo.Context) error {

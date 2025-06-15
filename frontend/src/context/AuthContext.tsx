@@ -5,56 +5,61 @@ interface User {
   role: string;
 }
 
-// Menentukan tipe dari context value
 interface AuthContextType {
+  [x: string]: any;
   isAuthenticated: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  syncAuthState: () => void; // ⬅️ Tambahkan fungsi sync
 }
 
-// Membuat context dengan default value undefined
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
 );
 
-// Menentukan tipe props untuk AuthProvider
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Komponen provider untuk konteks otentikasi
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     !!Cookies.get("token")
   );
-  const initialRole = localStorage.getItem("role") as User["role"] | null;
-  const [user, setUser] = useState<User | null>(
-    initialRole ? { role: initialRole } : null
-  );
+  const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
+  const syncAuthState = () => {
     const token = Cookies.get("token");
     const storedRole = localStorage.getItem("role");
 
-    const handleTokenChange = () => {
-      setIsAuthenticated(!!Cookies.get("token"));
-    };
-
-    const validRoles = ["admin", "headmaster", "dvPersuratan"];
+    const validRoles = ["admin", "headmaster", "dvpersuratan"];
     if (token && storedRole && validRoles.includes(storedRole)) {
-      setUser({ role: storedRole as User["role"] });
+      setIsAuthenticated(true);
+      setUser({ role: storedRole });
+    } else {
+      setIsAuthenticated(false);
+      setUser(null);
     }
+  };
 
-    window.addEventListener("storage", handleTokenChange);
+  useEffect(() => {
+    syncAuthState(); // ⬅️ jalankan pertama kali
+    window.addEventListener("storage", syncAuthState); // ⬅️ saat tab lain update
+
     return () => {
-      window.removeEventListener("storage", handleTokenChange);
+      window.removeEventListener("storage", syncAuthState);
     };
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, user, setUser }}
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        user,
+        setUser,
+        syncAuthState,
+      }}
     >
       {children}
     </AuthContext.Provider>

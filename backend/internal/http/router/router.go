@@ -10,7 +10,7 @@ import (
 var(
 	adminOnly = []string{"admin"}
 	// headmasterOnly = []string{"headmaster"}
-	dvPersuratanOnly = []string{"headmaster"}
+	// dvPersuratanOnly = []string{"headmaster"}
 	allRoles = []string{"admin", "headmaster", "dvpersuratan"}
 )
 
@@ -35,12 +35,6 @@ func PublicRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandl
 			Handler: userHandler.GetUsers,
 			Roles: allRoles,
 		},
-		{
-			Method: http.MethodPost,
-			Path: "/users",
-			Handler: userHandler.CreateUser,
-			Roles: allRoles,
-		},
 			{
 			Method: http.MethodGet,
 			Path: "/users/:id",
@@ -59,6 +53,18 @@ func PublicRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandl
 			Handler: userHandler.DeleteUser,
 			Roles: allRoles,
 		},
+		{
+			Method: http.MethodPost,
+			Path: "/mails",
+			Handler: mailHandler.CreateMail,
+			Roles: allRoles,
+		},
+				{
+			Method: http.MethodGet,
+			Path: "/mails",
+			Handler: mailHandler.GetAllMail,
+			Roles: allRoles,
+		},
 	}
 }
 
@@ -66,16 +72,10 @@ func PrivateRoutes(userHandler handler.UserHandler, mailHandler handler.MailHand
 	return []route.Route{
 	
 		{
-			Method: http.MethodGet,
-			Path: "/mails",
-			Handler: mailHandler.GetAllMail,
-			Roles: adminOnly,
-		},
-		{
 			Method: http.MethodPost,
-			Path: "/mails",
-			Handler: mailHandler.CreateMail,
-			Roles: dvPersuratanOnly,
+			Path: "/users",
+			Handler: userHandler.CreateUser,
+			Roles: adminOnly,
 		},
 	}
 }

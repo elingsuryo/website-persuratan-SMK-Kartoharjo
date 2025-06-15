@@ -1,5 +1,5 @@
 // import FC from react
-import { FC, useState, FormEvent } from "react";
+import { FC, useState, FormEvent, useContext } from "react";
 
 //import hook useNavigate from react router
 import { useNavigate } from "react-router";
@@ -10,6 +10,7 @@ import { useRegister } from "../../hooks/auth/useRegister";
 import "../../index.css";
 
 import bg1 from "../../assets/bg1.png";
+import { AuthContext } from "../../context/AuthContext";
 
 //interface for validation errors
 interface ValidationErrors {
@@ -22,6 +23,7 @@ const Register: FC = () => {
 
   //initialize useRegister
   const { mutate, isPending } = useRegister();
+  const { setUser, setIsAuthenticated } = useContext(AuthContext)!;
 
   //define state
   const [email, setEmail] = useState<string>("");
@@ -41,9 +43,12 @@ const Register: FC = () => {
         email,
         password,
         full_name,
+        role: "headmaster",
       },
       {
-        onSuccess: () => {
+        onSuccess: (data: any) => {
+          setUser({ role: data.data.role });
+          setIsAuthenticated(false);
           // Redirect to login page
           navigate("/login");
         },
