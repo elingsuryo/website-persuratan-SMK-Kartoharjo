@@ -1,6 +1,6 @@
 import "../../index.css";
 import { FormEvent, useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router";
+import { Link, Navigate, useParams } from "react-router";
 import { useUserById } from "../../hooks/user/useUserById";
 import { useUserUpdate } from "../../hooks/user/useUserUpdate";
 import SidebarMenu from "../../component/sidebarMenu";
@@ -13,7 +13,6 @@ const EditUser = () => {
   const { id } = useParams();
   //define state user
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [full_name, setName] = useState<string>("");
   const [whatsapp, setWhatsapp] = useState<string>("");
   const [role, setRole] = useState<string>("");
@@ -27,6 +26,7 @@ const EditUser = () => {
   useEffect(() => {
     if (user) {
       setName(user.full_name);
+      setEmail(user.email);
       setWhatsapp(user.whatsapp);
       setRole(user.role);
     }
@@ -43,6 +43,7 @@ const EditUser = () => {
         id: Number(id),
         data: {
           full_name,
+          email,
           whatsapp,
           role,
         },
@@ -154,26 +155,6 @@ const EditUser = () => {
             <div className="grid grid-cols-12 items-center gap-4 mb-4">
               <label
                 className="col-span-2 text-base font-normal text-black"
-                htmlFor="nomorSurat"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                value={[password]}
-                onChange={(e) => setPassword(e.target.value)}
-                className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Masukkan password"
-              />
-              {errors.Full_name && (
-                <div className="alert alert-danger mt-2 rounded-4">
-                  {errors.Full_name}
-                </div>
-              )}
-            </div>
-            <div className="grid grid-cols-12 items-center gap-4 mb-4">
-              <label
-                className="col-span-2 text-base font-normal text-black"
                 htmlFor="pengirim"
               >
                 Whatsapp
@@ -210,7 +191,7 @@ const EditUser = () => {
               type="submit"
               className="bg-[#E80004] text-white m-4 px-9 py-2 rounded-md hover:bg-red-700 transition"
             >
-              Batal
+              <Link to="/admin/kelola-user">Batal</Link>
             </button>
           </form>
         </div>

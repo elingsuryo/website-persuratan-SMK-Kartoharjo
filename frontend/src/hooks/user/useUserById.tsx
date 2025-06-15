@@ -20,7 +20,7 @@ export interface User {
 export const useUserById = (id: number) => {
   return useQuery<User, Error>({
     //query key, disesuaikan dengan ID user untuk caching
-    queryKey: ["user", id],
+    queryKey: ["users", id],
 
     //query function
     queryFn: async () => {

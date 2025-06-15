@@ -8,10 +8,10 @@ import (
 )
 
 var(
-	adminOnly = []string{"Admin"}
+	adminOnly = []string{"admin"}
 	// headmasterOnly = []string{"headmaster"}
-	dvPersuratanOnly = []string{"Headmaster"}
-	allRoles = []string{"Admin", "Headmaster", "DvPersuratan"}
+	dvPersuratanOnly = []string{"headmaster"}
+	allRoles = []string{"admin", "headmaster", "dvpersuratan"}
 )
 
 func PublicRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandler) []route.Route{

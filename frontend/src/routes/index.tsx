@@ -7,8 +7,6 @@ import { AuthContext } from "../context/AuthContext";
 //import react router dom
 import { Routes, Route, Navigate } from "react-router";
 
-import ProtectedRoute from "./protectedRoute.tsx";
-
 //import view home
 import Home from "../views/home/index.tsx";
 
@@ -44,6 +42,20 @@ export default function AppRoutes() {
 
   const isAuthenticated = auth?.isAuthenticated ?? false;
 
+  const getDashboardRedirect = () => {
+    const role = localStorage.getItem("role");
+    switch (role) {
+      case "admin":
+        return "/admin/dashboard";
+      case "headmaster":
+        return "/kepalasekolah/dashboard";
+      case "dvPersuratan":
+        return "/dvpersuratan/dashboard";
+      default:
+        return "/unauthorized";
+    }
+  };
+
   return (
     <Routes>
       {/* route "/" */}
@@ -64,42 +76,23 @@ export default function AppRoutes() {
 
       {/* <Route path="/kepalasekolah/suratmasuk" element={<SuratMasukKS />} /> */}
 
-      <Route
-        path="/admin/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
       <Route path="/admin/tambah-user" element={<TambahUser />} />
 
-      <Route
-        path="
-      "
-        element={<EditUser />}
-      />
+      <Route path="/admin/edit-user/:id" element={<EditUser />} />
 
       {/* route "/login" */}
       <Route
         path="/login"
         element={
-          isAuthenticated ? (
-            <Navigate to="/kepalasekolah/dashboard" />
-          ) : (
-            <Login />
-          )
+          isAuthenticated ? <Navigate to={getDashboardRedirect()} /> : <Login />
         }
       />
 
       <Route
         path="/kepalasekolah/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={["headmaster"]}>
-            <HeadmasterDashboard />
-          </ProtectedRoute>
-        }
+        element={<HeadmasterDashboard />}
       />
 
       <Route path="/dvpersuratan/uploadsurat" element={<UpSurat />} />

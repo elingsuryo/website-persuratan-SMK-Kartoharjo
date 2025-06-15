@@ -186,7 +186,7 @@ const KelolaUser: FC = () => {
                           fill="white"
                         />
                       </svg>
-                      Edit Data
+                      <Link to={`/admin/edit-user/${user.id}`}>Edit Data</Link>
                     </button>
                     <br />
                     <button

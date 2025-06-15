@@ -70,12 +70,18 @@ export const Login: FC = () => {
           setIsAuthenticated(true);
 
           // Redirect to dashboard page
-          if (data.data.role === "admin") {
-            navigate("/admin/dashboard");
-          } else if (data.data.role === "headmaster") {
-            navigate("/kepalasekolah/dashboard");
-          } else if (data.data.role === "dvPersuratan") {
-            navigate("/dvpersuratan/dashboard");
+          const roleRoutes: Record<string, string> = {
+            admin: "/admin/dashboard",
+            headmaster: "/kepalasekolah/dashboard",
+            dvPersuratan: "/dvpersuratan/dashboard",
+          };
+
+          const route = roleRoutes[data.data.role];
+
+          if (route) {
+            navigate(route);
+          } else {
+            navigate("/unauthorized");
           }
         },
         onError: (error: any) => {
