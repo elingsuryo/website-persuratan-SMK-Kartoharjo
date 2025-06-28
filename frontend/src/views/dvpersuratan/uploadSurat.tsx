@@ -2,26 +2,20 @@ import "../../index.css";
 import SidebarMenu from "../../component/sidebarMenu";
 import { useMailCreate } from "../../hooks/mail/useMailCreate";
 import { FormEvent, useState } from "react";
-import { Navigate } from "react-router";
+import { useNavigate } from "react-router";
 
 interface ValidationErrors {
   [key: string]: string;
 }
 
 const DvPersuratan = () => {
+  const navigate = useNavigate();
+  // Inisialisasi state
   const [judul, setJudul] = useState<string>("");
   const [deskripsi, setDeskripsi] = useState<string>("");
   const [kategori, setKategori] = useState<string>("");
   const [tgl_upload, setTglUpload] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
-
-  const fileToBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
 
@@ -32,37 +26,27 @@ const DvPersuratan = () => {
   const storeMail = async (e: FormEvent) => {
     e.preventDefault();
 
-    let base64File: string | undefined = undefined;
+    const formData = new FormData();
+    formData.append("judul", judul);
+    formData.append("deskripsi", deskripsi);
+    formData.append("kategori", kategori);
+    formData.append("tgl_upload", tgl_upload);
 
     if (file) {
-      try {
-        base64File = await fileToBase64(file);
-      } catch (err) {
-        console.error("Gagal konversi file ke base64", err);
-        return;
-      }
+      formData.append("file", file); // penting! gunakan key yg sama dgn di backend
+    } else {
+      setErrors({ file: "File harus diunggah" });
+      return;
     }
 
-    // Call the user create mutation
-    mutate(
-      {
-        judul,
-        deskripsi,
-        kategori,
-        tgl_upload,
-        file: base64File,
+    mutate(formData, {
+      onSuccess: () => {
+        navigate("/dvpersuratan/suratmasuk");
       },
-      {
-        onSuccess: () => {
-          // Redirect to users index
-          <Navigate to="/dvpersuratan/suratmasuk" />;
-        },
-        onError: (error: any) => {
-          //set errors to state "errors"
-          setErrors(error.response.data.errors);
-        },
-      }
-    );
+      onError: (error: any) => {
+        setErrors(error.response?.data?.errors || {});
+      },
+    });
   };
 
   return (
@@ -131,6 +115,11 @@ const DvPersuratan = () => {
                   className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Masukkan Judul Dokumen"
                 />
+                {errors.judul && (
+                  <div className="alert alert-danger mt-2 rounded-4">
+                    {errors.judul}
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-12 items-center gap-4 mb-4">
                 <label
@@ -206,6 +195,9 @@ const DvPersuratan = () => {
                   <input
                     accept="application/pdf"
                     type="file"
+                    id="file-upload"
+                    name="file"
+                    className="hidden"
                     onChange={(e) => setFile(e.target.files?.[0] || null)}
                   />
                 </label>

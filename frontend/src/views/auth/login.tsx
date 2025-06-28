@@ -54,6 +54,7 @@ export const Login: FC = () => {
           Cookies.set("token", data.data.token);
           //set role to localStorage
           localStorage.setItem("role", data.data.role);
+          localStorage.setItem("token", data.data.token);
 
           //set user to cookie
           Cookies.set(

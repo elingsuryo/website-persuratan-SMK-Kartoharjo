@@ -1,34 +1,34 @@
-// import useMutation dari '@tanstack/react-query';
-import { useMutation } from "@tanstack/react-query";
-
-//import service API
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Api from "../../services/api";
+import Cookies from "js-cookie";
 
-// import js-cookie
-// import Cookies from "js-cookie";
-
-//interface UserRequest untuk update
-interface MailRequest {
-  judul?: string;
-  deskripsi?: string;
-  kategori?: string;
-  tgl_upload?: string;
-  file?: string;
+interface MailUpdate {
+  id: number;
+  judul: string;
+  deskripsi: string;
+  kategori: string;
+  tgl_upload: string;
+  file: string;
+  accept: boolean;
 }
 
-// Hook untuk update Mail
 export const useMailUpdate = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    // Mutation untuk update Mail
-    mutationFn: async ({ id, data }: { id: number; data: MailRequest }) => {
-      // Ambil token dari cookies
-      // const token = Cookies.get("token");
-
-      // Gunakan service API untuk melakukan update user
-      const response = await Api.put(`/api/v1/mails/${id}`, data);
-
-      // Mengembalikan response data
-      return response.data;
+    mutationFn: async ({ id, data }: { id: number; data: FormData }) => {
+      const token = Cookies.get("token");
+      const response = await Api.put(`/api/v1/mails/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data as MailUpdate;
+    },
+    onSuccess: () => {
+      // Pastikan queryKey-nya sesuai dengan yang digunakan di useMail()
+      queryClient.invalidateQueries({ queryKey: ["mails"] });
     },
   });
 };

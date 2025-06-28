@@ -20,11 +20,12 @@ type Server struct {
 
 func NewServer(cfg *config.Config, publicRoutes []route.Route, privateRoutes []route.Route) *Server {
 	e := echo.New()
+	e.Static("/read/uploads", "uploads")
 	v1 := e.Group("/api/v1")
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete, http.MethodPatch},
 	}))
 
@@ -48,7 +49,7 @@ func JWTMiddleware(secretKey string) echo.MiddlewareFunc {
 		NewClaimsFunc: func(c echo.Context) jwt.Claims{
 			return new(entity.JwtCustomClaims)
 		},
-		SigningKey: []byte(secretKey),
+		SigningKey: []byte(secretKey),   
 		ErrorHandler: func(ctx echo.Context, err error) error {
 			return ctx.JSON(http.StatusUnauthorized, response.ErrorResponse(http.StatusUnauthorized, "anda harus login untuk bisa mengakses"))
 		},

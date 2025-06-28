@@ -6,7 +6,6 @@ interface User {
   id: number;
   fullname: string;
   email: string;
-  role: string;
 }
 
 export const useAuthUser = (): User | null => {

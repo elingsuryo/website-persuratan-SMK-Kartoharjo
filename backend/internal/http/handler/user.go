@@ -37,8 +37,8 @@ func (h *UserHandler) Login(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully login", map[string]string{
-	"role":  claims.Role,
 		"token": token,
+		"role" : claims.Role,
 }))
 
 }

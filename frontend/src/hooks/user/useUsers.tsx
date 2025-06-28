@@ -5,10 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import Api from "../../services/api";
 
 // import js-cookie
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 //interface User
 export interface User {
+  last_login: string | number | Date;
   // whatsapp: number;
   id: number;
   full_name: string;
@@ -25,10 +26,14 @@ export const useUsers = () => {
     //query function
     queryFn: async () => {
       //get token from cookies
-      // const token = Cookies.get("token");
+      const token = Cookies.get("token");
 
       //get users from api
-      const response = await Api.get("/api/v1/users");
+      const response = await Api.get("/api/v1/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       //return data
       return response.data.data as User[];

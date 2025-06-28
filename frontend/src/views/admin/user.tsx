@@ -40,13 +40,6 @@ const KelolaUser: FC = () => {
         <header className="flex mb-6 border-b w-full">
           <div className="flex items-center justify-between w-full px-8 py-4">
             <h1 className="text-2xl font-bold font-poppins">Kelola User</h1>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search"
-                className="px-4 py-1.5 rounded-full border border-gray-300 focus:outline-none bg-[#2E3334] text-white"
-              />
-            </div>
             <div className="flex items-center gap-3 font-poppins font-semibold">
               <span>Admin</span>
               {/* <img

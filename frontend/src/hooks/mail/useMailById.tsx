@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import Api from "../../services/api";
 
 // import js-cookie
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 //interface User
 export interface Mail {
@@ -15,23 +15,28 @@ export interface Mail {
   kategori: string;
   tgl_upload: string;
   file: string;
+  note: string;
 }
 
 //hook useMailById dengan parameter id dan return type Mail
 export const useMailById = (id: number) => {
   return useQuery<Mail, Error>({
     //query key, disesuaikan dengan ID Mail untuk caching
-    queryKey: ["mail", id],
+    queryKey: ["mails", id],
 
     //query function
     queryFn: async () => {
       //get token from cookies
-      // const token = Cookies.get("token");
+      const token = Cookies.get("token");
 
       //get user by id from api
       //
 
-      const response = await Api.get(`/api/v1/mails/${id}`);
+      const response = await Api.get(`/api/v1/mails/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       //return data
       return response.data.data as Mail;

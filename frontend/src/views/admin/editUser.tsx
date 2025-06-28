@@ -109,7 +109,7 @@ const EditUser = () => {
         </header>
         <div className="bg-white drop-shadow-xl shadow-black shadow- rounded-md p-6 w-[90%] m-auto">
           <div className="mb-4  border-b border-solid">
-            <p className="mb-2 text-2xl font-bold">Tambah Kontak</p>
+            <p className="mb-2 text-2xl font-bold">Edit User</p>
           </div>
           <form onSubmit={updateUser}>
             <div className="grid grid-cols-12 items-center gap-4 mb-4">

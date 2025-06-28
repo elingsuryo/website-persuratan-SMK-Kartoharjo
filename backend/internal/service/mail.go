@@ -14,7 +14,8 @@ type MailService interface {
 	Create(ctx context.Context, req dto.CreateMailRequest) error
 	Update(ctx context.Context, req dto.UpdateMailRequest) error
     Delete(ctx context.Context, mails *entity.Mail) error
-
+	Signed(ctx context.Context, req dto.SignedMailRequest) error
+	Reject(ctx context.Context, req dto.RejectMailRequest) error
 }
 
 
@@ -41,6 +42,8 @@ func (s mailService) Create(ctx context.Context, req dto.CreateMailRequest) erro
 		Kategori:  req.Kategori,
 		TglUpload: req.TglUpload,
 		File:      req.File,
+		Keterangan: "Diproses",
+		Accept:    false,
 	}
 	return s.mailsRepository.Create(ctx, mail)
 }
@@ -71,4 +74,32 @@ func (s mailService) Update(ctx context.Context, req dto.UpdateMailRequest) erro
 
 func (s mailService) Delete(ctx context.Context, mails *entity.Mail) error{
 	return s.mailsRepository.Delete(ctx, mails)
+}
+
+func (s mailService) Signed(ctx context.Context, req dto.SignedMailRequest) error{
+	mails, err := s.mailsRepository.GetByID(ctx, req.ID)
+	if err != nil {
+		return err
+	}
+	if req.File != "" {
+		mails.File = req.File
+	}
+	if req.Keterangan != "" {
+		mails.Keterangan = "Diterima"
+	}
+	mails.Accept = true
+	return s.mailsRepository.Update(ctx, mails)
+}
+
+func (s mailService) Reject(ctx context.Context, req dto.RejectMailRequest) error{
+	mails, err := s.mailsRepository.GetByID(ctx, req.ID)
+	if err != nil {
+		return err
+	}
+	if req.Keterangan != "" {
+		mails.Keterangan = "Ditolak"
+	}
+	mails.Note = req.Note
+	mails.Accept = false
+	return s.mailsRepository.Update(ctx, mails)
 }

@@ -5,17 +5,18 @@ import { useQuery } from "@tanstack/react-query";
 import Api from "../../services/api";
 
 // import js-cookie
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 //interface User
 export interface Mail {
-  // whatsapp: number;
+  keterangan: string;
   id: number;
   judul: string;
   deskripsi: string;
   kategori: string;
   tgl_upload: string;
-  file?: string;
+  note: string;
+  file: string;
   accept: boolean;
 }
 
@@ -28,10 +29,14 @@ export const useMail = () => {
     //query function
     queryFn: async () => {
       //get token from cookies
-      // const token = Cookies.get("token");
+      const token = Cookies.get("token");
 
       //get users from api
-      const response = await Api.get("/api/v1/mails");
+      const response = await Api.get("/api/v1/mails", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       //return data
       return response.data.data as Mail[];

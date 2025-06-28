@@ -2,7 +2,7 @@ import "../../index.css";
 import SidebarMenu from "../../component/sidebarMenu";
 
 import { FormEvent, useState } from "react";
-import { Navigate } from "react-router";
+import { Link, Navigate } from "react-router";
 import { useUserCreate } from "../../hooks/user/useUserCreate";
 
 interface ValidationErrors {
@@ -188,18 +188,20 @@ const TambahUser = () => {
                   className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <button
-                type="submit"
-                className="bg-[#325389] text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
-                disabled={isPending}
-              >
-                {isPending ? "Menambahkan..." : "Tambah Kontak"}
-              </button>
+              <Link to="/admin/kelola-user">
+                <button
+                  type="submit"
+                  className="bg-[#325389] text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+                  disabled={isPending}
+                >
+                  {isPending ? "Menambahkan..." : "Tambah Kontak"}
+                </button>
+              </Link>
               <button
                 type="submit"
                 className="bg-[#E80004] text-white m-4 px-9 py-2 rounded-md hover:bg-red-700 transition"
               >
-                Batal
+                <Link to="/admin/kelola-user">Batal</Link>
               </button>
             </form>
           </div>

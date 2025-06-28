@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strconv"
 	"time"
 
 	"website-penyuratan-smk-kartoharjo/internal/http/dto"
@@ -12,6 +14,8 @@ import (
 	"website-penyuratan-smk-kartoharjo/pkg/response"
 
 	"github.com/labstack/echo/v4"
+	"github.com/pdfcpu/pdfcpu/pkg/api"
+	"github.com/skip2/go-qrcode"
 )
 
 type MailHandler struct {
@@ -23,12 +27,12 @@ func NewMailHandler(mailService service.MailService) MailHandler {
 }
 
 func (h *MailHandler) GetAllMail(ctx echo.Context) error {
-	users, err := h.mailservice.GetAll(ctx.Request().Context())
+	mails, err := h.mailservice.GetAll(ctx.Request().Context())
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
 	}
 
-	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully", users))
+	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully", mails))
 }
 
 func (h* MailHandler) GetMail(ctx echo.Context) error{
@@ -94,22 +98,73 @@ func (h *MailHandler) CreateMail(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
 	}
 
-	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully uploaded", nil))
+	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully uploaded", map[string]string{
+        "file_url": "http://localhost:8080/dvpersuratan/uploads/namafile.pdf",
+    },))
 }
 
 func (h *MailHandler) UpdateMail(ctx echo.Context) error {
-	var req dto.UpdateMailRequest
-	if err := ctx.Bind(&req); err != nil {
-		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, err.Error()))
-	}
+    // Ambil ID dari parameter URL
+    idStr := ctx.Param("id")
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, "invalid ID"))
+    }
 
-	err := h.mailservice.Update(ctx.Request().Context(), req)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
-	}
+    // Ambil data dari form
+    judul := ctx.FormValue("judul")
+    deskripsi := ctx.FormValue("deskripsi")
+    kategori := ctx.FormValue("kategori")
+    tglUpload := ctx.FormValue("tgl_upload")
 
-	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully updating ", nil))
+    var filePath string
+
+    // Cek apakah ada file baru yang diupload
+    formFile, err := ctx.FormFile("file")
+    if err == nil {
+        src, err := formFile.Open()
+        if err != nil {
+            return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, "failed to open uploaded file"))
+        }
+        defer src.Close()
+
+        // Buat folder jika belum ada
+        os.MkdirAll("uploads", os.ModePerm)
+
+        // Buat nama file unik
+        filename := fmt.Sprintf("%d_%s", time.Now().Unix(), formFile.Filename)
+        filePath = "uploads/" + filename
+
+        dst, err := os.Create(filePath)
+        if err != nil {
+            return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, "failed to save uploaded file"))
+        }
+        defer dst.Close()
+
+        if _, err := io.Copy(dst, src); err != nil {
+            return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, "failed to copy uploaded file"))
+        }
+    }
+
+    // Siapkan request DTO
+    req := dto.UpdateMailRequest{
+        ID:        int64(id),
+        Judul:     judul,
+        Deskripsi: deskripsi,
+        Kategori:  kategori,
+        TglUpload: tglUpload,
+        File:      filePath, // bisa kosong jika tidak diupdate
+    }
+
+    // Panggil service
+    err = h.mailservice.Update(ctx.Request().Context(), req)
+    if err != nil {
+        return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
+    }
+
+    return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully updated", nil))
 }
+
 
 func (h *MailHandler) DeleteMail(ctx echo.Context) error {
 	var req dto.GetMailByIDRequest
@@ -128,4 +183,72 @@ func (h *MailHandler) DeleteMail(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully deleting ", nil))
+}
+
+func (h *MailHandler) SignedMail(ctx echo.Context) error {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, "invalid ID"))
+	}
+
+	// Ambil data surat dari database
+	surat, err := h.mailservice.GetByID(ctx.Request().Context(), int64(id))
+	if err != nil {
+		return ctx.JSON(http.StatusNotFound, response.ErrorResponse(http.StatusNotFound, "surat tidak ditemukan"))
+	}
+
+	// Inisialisasi path file asal dan tujuan
+	originalFilePath := surat.File
+	fileName := filepath.Base(originalFilePath)
+	signedFilePath := filepath.Join("uploads", "signed_" + fileName)
+
+	// Generate QR Code
+	qrContent := fmt.Sprintf("ID: %d\nStatus: Diterima\nTime: %s", id, time.Now().Format("2006-01-02 15:04:05"))
+	qrTempPath := fmt.Sprintf("uploads/qr_%d.png", time.Now().Unix())
+
+	err = qrcode.WriteFile(qrContent, qrcode.Medium, 256, qrTempPath)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, "failed to generate QR code"))
+	}
+
+	// Masukkan QR ke PDF
+	desc := "scale:0.3, pos:bl, rot:90"
+	err = api.AddImageWatermarksFile(originalFilePath, signedFilePath, []string{"-1"}, true, qrTempPath, desc, nil)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, "failed to embed QR code"))
+	}
+	_ = os.Remove(qrTempPath)
+
+	// Update data surat
+	req := dto.SignedMailRequest{
+		ID:         int64(id),
+		Accept:     true,
+		Keterangan: "Diterima",
+		File:       signedFilePath,
+	}
+	err = h.mailservice.Signed(ctx.Request().Context(), req)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
+	}
+
+	return ctx.JSON(http.StatusOK, response.SuccessResponse("Successfully Signed", nil))
+}
+
+
+
+
+func (h *MailHandler) RejectMail(ctx echo.Context) error {
+	var req dto.RejectMailRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, err.Error()))
+	}
+	req.Keterangan = "Ditolak"
+	req.Accept = false
+	err := h.mailservice.Reject(ctx.Request().Context(), req)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
+	}
+
+	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully reject mail", nil))
 }

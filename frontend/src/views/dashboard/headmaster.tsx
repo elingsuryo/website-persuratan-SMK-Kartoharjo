@@ -1,7 +1,35 @@
 import { Link } from "react-router";
 import "../../index.css";
+import { Mail, useMail } from "../../hooks/mail/useMail";
 
 const HeadmasterDashboard = () => {
+  const { data: mails = [] } = useMail();
+  const now = new Date();
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(now.getDate() - 7);
+
+  const jumlahTotal = mails.length;
+  const jumlahDiproses = mails.filter(
+    (mail) =>
+      mail.keterangan === "Diproses" && new Date(mail.tgl_upload) >= oneWeekAgo
+  ).length;
+  const jumlahDiterima = mails.filter(
+    (mail) =>
+      mail.keterangan === "Diterima" && new Date(mail.tgl_upload) >= oneWeekAgo
+  ).length;
+
+  // Filter dan sort surat berdasarkan tgl_upload (terbaru di atas)
+  const suratTerbaru: Mail[] = (mails || [])
+    .filter((mail: Mail) => {
+      const tglUpload = new Date(mail.tgl_upload);
+      return (
+        tglUpload >= oneWeekAgo || mail.keterangan?.toLowerCase() === "diproses"
+      );
+    })
+    .sort(
+      (a: Mail, b: Mail) =>
+        new Date(b.tgl_upload).getTime() - new Date(a.tgl_upload).getTime()
+    );
   return (
     <div>
       <aside className="fixed z-40 w-64 h-screen">
@@ -102,21 +130,12 @@ const HeadmasterDashboard = () => {
         <header className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search"
-                className="px-4 py-1.5 rounded-full border border-gray-300 focus:outline-none"
-              />
-            </div>
             <div className="flex items-center gap-3">
-              <span>📬</span>
-              <span>🔔</span>
               <span>Kepala Sekolah</span>
               <img
-                src="https://via.placeholder.com/32"
-                className="rounded-full w-8 h-8"
+                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80' fill='none'><circle cx='40' cy='40' r='40' fill='%23E2E8F0'/><circle cx='40' cy='28' r='14' fill='%23CBD5E0'/><path d='M20 62c0-11.046 8.954-20 20-20s20 8.954 20 20' fill='%23CBD5E0'/></svg>"
                 alt="Profile"
+                className="rounded-full w-10 h-10"
               />
             </div>
           </div>
@@ -124,58 +143,80 @@ const HeadmasterDashboard = () => {
 
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="p-4 bg-white rounded-xl shadow text-center">
-            <p className="text-3xl font-bold text-red-600">9</p>
-            <p className="text-sm">Ditolak</p>
+            <p className="text-3xl font-bold text-red-600">{jumlahTotal}</p>
+            <p className="text-sm">Surat Masuk</p>
           </div>
           <div className="p-4 bg-white rounded-xl shadow text-center">
-            <p className="text-3xl font-bold text-yellow-500">5</p>
-            <p className="text-sm">Diproses</p>
+            <p className="text-3xl font-bold text-yellow-500">
+              {jumlahDiproses}
+            </p>
+            <p className="text-sm">Menunggu Ditanda tangani</p>
           </div>
           <div className="p-4 bg-white rounded-xl shadow text-center">
-            <p className="text-3xl font-bold text-green-600">4</p>
+            <p className="text-3xl font-bold text-green-600">
+              {jumlahDiterima}
+            </p>
             <p className="text-sm">Selesai</p>
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          <div className="col-span-2 p-4 bg-white rounded-xl shadow">
-            <h2 className="font-semibold mb-2">Kategori</h2>
+          <div className="col-span-2 p-4 bg-white rounded-xl shadow max-h-80 overflow-y-auto">
+            <h2 className="font-semibold mb-2">Surat Perlu Ditandatangani</h2>
 
-            <div className="w-full h-64 bg-gray-100 flex items-center justify-center rounded">
-              <p>Chart Placeholder</p>
-            </div>
-            <div className="flex justify-around mt-4 text-sm text-gray-600">
-              <span className="text-blue-900">■ Surat A</span>
-              <span className="text-blue-700">■ Surat B</span>
-              <span className="text-blue-500">■ Surat C</span>
-              <span className="text-blue-300">■ Surat D</span>
+            <div className="space-y-3">
+              {mails
+                .filter((mail) => mail.keterangan === "Diproses")
+                .map((mail) => (
+                  <div
+                    key={mail.id}
+                    className="flex items-center justify-between border rounded-xl p-3 bg-gray-50"
+                  >
+                    <div>
+                      <p className="font-semibold">{mail.judul}</p>
+                      <p className="text-xs text-gray-500">
+                        Diunggah:{" "}
+                        {new Date(mail.tgl_upload).toLocaleDateString("id-ID")}
+                      </p>
+                    </div>
+                    <div className="text-yellow-600 font-semibold text-sm">
+                      Perlu TTD
+                    </div>
+                  </div>
+                ))}
+
+              {mails.filter((mail) => mail.keterangan === "Diproses").length ===
+                0 && (
+                <p className="text-sm text-gray-500 text-center">
+                  Tidak ada surat yang perlu ditandatangani.
+                </p>
+              )}
             </div>
           </div>
 
           <div className="p-4 bg-white rounded-xl shadow overflow-y-auto">
-            <h2 className="font-semibold mb-2">Filter</h2>
+            <h2 className="font-semibold mb-2">Surat Terbaru</h2>
             <div className="space-y-3">
-              <div className="flex items-center justify-between border rounded-xl p-2">
-                <div>
-                  <p className="font-semibold">Surat B</p>
-                  <p className="text-xs text-gray-500">Saving Funds #B</p>
+              {suratTerbaru.map((mail: Mail) => (
+                <div
+                  key={mail.id}
+                  className="flex items-center justify-between border rounded-xl p-2"
+                >
+                  <div>
+                    <p className="font-semibold">{mail.judul}</p>
+                    <p className="text-xs text-gray-500">{mail.deskripsi}</p>
+                  </div>
+                  <div
+                    className={`text-sm ${
+                      mail.keterangan?.toLowerCase() === "diproses"
+                        ? "text-yellow-500"
+                        : "text-green-600"
+                    }`}
+                  >
+                    {mail.keterangan || "Baru"}
+                  </div>
                 </div>
-                <div className="text-green-600 text-sm">Selesai</div>
-              </div>
-              <div className="flex items-center justify-between border rounded-xl p-2">
-                <div>
-                  <p className="font-semibold">Surat A</p>
-                  <p className="text-xs text-gray-500">Emergency #D</p>
-                </div>
-                <div className="text-green-600 text-sm">Selesai</div>
-              </div>
-              <div className="flex items-center justify-between border rounded-xl p-2">
-                <div>
-                  <p className="font-semibold">Surat C</p>
-                  <p className="text-xs text-gray-500">Saving Funds #A</p>
-                </div>
-                <div className="text-yellow-500 text-sm">Diproses</div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
