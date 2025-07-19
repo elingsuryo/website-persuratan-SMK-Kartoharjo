@@ -8,9 +8,10 @@ import (
 )
 
 var(
-	// adminOnly = []string{"admin"}
+	adminOnly = []string{"admin"}
 	headmasterOnly = []string{"headmaster"}
-	// dvPersuratanOnly = []string{"headmaster"}
+	dvPersuratanOnly = []string{"dvpersuratan"}
+	adminPersuratanOnly = []string{"admin", "dvpersuratan"}
 	allRoles = []string{"admin", "headmaster", "dvpersuratan"}
 )
 
@@ -29,41 +30,46 @@ func PublicRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandl
 			Handler: userHandler.Register,
 			Roles: allRoles,
 		},
+	}
+}
+
+func PrivateRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandler) []route.Route{
+	return []route.Route{
 		{
 			Method: http.MethodGet,
 			Path: "/users",
 			Handler: userHandler.GetUsers,
-			Roles: headmasterOnly,
+			Roles: adminPersuratanOnly,
 		},
 		{
 			Method: http.MethodPost,
 			Path: "/users",
 			Handler: userHandler.CreateUser,
-			Roles: allRoles,
+			Roles: adminOnly,
 		},
 		{
 			Method: http.MethodGet,
 			Path: "/users/:id",
 			Handler: userHandler.GetByID,
-			Roles: allRoles,
+			Roles: adminOnly,
 		},
 		{
 			Method: http.MethodPut,
 			Path: "/users/:id",
 			Handler: userHandler.UpdateUser,
-			Roles: allRoles,
+			Roles: adminOnly,
 		},
 		{
 			Method: http.MethodDelete,
 			Path: "/users/:id",
 			Handler: userHandler.DeleteUser,
-			Roles: allRoles,
+			Roles: adminOnly,
 		},
 		{
 			Method: http.MethodPost,
 			Path: "/mails",
 			Handler: mailHandler.CreateMail,
-			Roles: allRoles,
+			Roles: dvPersuratanOnly,
 		},
 		{
 			Method: http.MethodGet,
@@ -81,36 +87,25 @@ func PublicRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandl
 			Method: http.MethodDelete,
 			Path: "/mails/:id",
 			Handler: mailHandler.DeleteMail,
-			Roles: allRoles,
+			Roles: dvPersuratanOnly,
 		},
 		{
 			Method: http.MethodPut,
 			Path: "/mails/:id",
 			Handler: mailHandler.UpdateMail,
-			Roles: allRoles,
+			Roles: dvPersuratanOnly,
 		},
 		{
 			Method: http.MethodPut,
 			Path: "/mails/signed/:id",
 			Handler: mailHandler.SignedMail,
-			Roles: allRoles,
+			Roles: headmasterOnly,
 		},
 		{
 			Method: http.MethodPut,
 			Path: "/mails/reject/:id",
 			Handler: mailHandler.RejectMail,
-			Roles: allRoles,
-		},
-	}
-}
-
-func PrivateRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandler) []route.Route{
-	return []route.Route{
-		{
-			Method: http.MethodPost,
-			Path: "/users",
-			Handler: userHandler.CreateUser,
-			Roles: allRoles,
+			Roles: headmasterOnly,
 		},
 	}
 }

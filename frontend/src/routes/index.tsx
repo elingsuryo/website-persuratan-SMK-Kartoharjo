@@ -54,7 +54,7 @@ const LoginRoute = () => {
         return <Navigate to="/admin/dashboard" />;
       case "headmaster":
         return <Navigate to="/kepalasekolah/dashboard" />;
-      case "dvPersuratan":
+      case "dvpersuratan":
         return <Navigate to="/dvpersuratan/dashboard" />;
       default:
         return <Navigate to="/unauthorized" />;
@@ -90,22 +90,46 @@ export default function AppRoutes() {
         path="/admin/kelola-user"
         element={isAuthenticated ? <KelolaUser /> : <LoginRoute />}
       />
-      <Route path="/admin/tambah-user" element={<TambahUser />} />
-      <Route path="/admin/edit-user/:id" element={<EditUser />} />
+      <Route
+        path="/admin/tambah-user"
+        element={isAuthenticated ? <TambahUser /> : <LoginRoute />}
+      />
+      <Route
+        path="/admin/edit-user/:id"
+        element={isAuthenticated ? <EditUser /> : <LoginRoute />}
+      />
 
       {/* route headmaster */}
       <Route
         path="/kepalasekolah/dashboard"
         element={<HeadmasterDashboard />}
       />
-      <Route path="/kepalasekolah/suratmasuk" element={<SuratMasukKS />} />
+      <Route
+        path="/kepalasekolah/suratmasuk"
+        element={isAuthenticated ? <SuratMasukKS /> : <LoginRoute />}
+      />
 
       {/* route dvpersuratan */}
-      <Route path="/dvpersuratan/dashboard" element={<DvPersuratan />} />
-      <Route path="/dvpersuratan/uploadsurat" element={<UpSurat />} />
-      <Route path="/dvpersuratan/editsurat/:id" element={<EditSurat />} />
-      <Route path="/dvpersuratan/suratmasuk" element={<SuratMasukDV />} />
-      <Route path="/dvpersuratan/suratkeluar" element={<SuratKeluarDV />} />
+      <Route
+        path="/dvpersuratan/dashboard"
+        element={isAuthenticated ? <DvPersuratan /> : <LoginRoute />}
+      />
+      <Route
+        path="/dvpersuratan/uploadsurat"
+        element={isAuthenticated ? <UpSurat /> : <LoginRoute />}
+      />
+      <Route
+        path="/dvpersuratan/editsurat/:id"
+        element={isAuthenticated ? <EditSurat /> : <LoginRoute />}
+      />
+      <Route
+        path="/dvpersuratan/suratmasuk"
+        element={isAuthenticated ? <SuratMasukDV /> : <LoginRoute />}
+      />
+      <Route
+        path="/dvpersuratan/suratkeluar"
+        element={isAuthenticated ? <SuratKeluarDV /> : <LoginRoute />}
+      />
     </Routes>
   );
 }

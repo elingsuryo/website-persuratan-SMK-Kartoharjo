@@ -192,7 +192,7 @@ func (h *MailHandler) SignedMail(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, "invalid ID"))
 	}
 
-	// Ambil data surat dari database
+	// Ambil data surat berdasarkan ID
 	surat, err := h.mailservice.GetByID(ctx.Request().Context(), int64(id))
 	if err != nil {
 		return ctx.JSON(http.StatusNotFound, response.ErrorResponse(http.StatusNotFound, "surat tidak ditemukan"))
@@ -213,7 +213,7 @@ func (h *MailHandler) SignedMail(ctx echo.Context) error {
 	}
 
 	// Masukkan QR ke PDF
-	desc := "scale:0.3, pos:bl, rot:90"
+	desc := "scale:0.1, pos:br, off:-190 210, rot:0"
 	err = api.AddImageWatermarksFile(originalFilePath, signedFilePath, []string{"-1"}, true, qrTempPath, desc, nil)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, "failed to embed QR code"))

@@ -55,11 +55,6 @@ const Home: FC = () => {
             <h2 className="text-2xl md:text-4xl font-light mb-4">
               Sistem Kearsipan Surat
             </h2>
-            <p className="text-sm md:text-base max-w-xl">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam.
-            </p>
           </div>
         </div>
 
