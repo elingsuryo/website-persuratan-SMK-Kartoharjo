@@ -151,8 +151,8 @@ const DvPersuratan = () => {
                   <option disabled selected>
                     pilih opsi
                   </option>
-                  <option value={"Surat Masuk"}>Surat Masuk</option>
-                  <option value={"Surat Keluar"}>Surat Keluar</option>
+                  <option value={"Surat Masuk"}>Surat Keterangan</option>
+                  <option value={"Surat Keluar"}>Surat Pelatihan</option>
                 </select>
               </div>
               <div className="grid grid-cols-12 items-center gap-4 mb-4">

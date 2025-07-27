@@ -35,9 +35,7 @@ const SuratMasuk = () => {
       <main className="flex-1 overflow-auto p-4 sm:ml-64">
         <header className="flex mb-6 border-b w-full">
           <div className="flex items-center justify-between w-full px-8 py-4">
-            <h1 className="text-2xl font-bold font-poppins">
-              Konfirmasi Surat
-            </h1>
+            <h1 className="text-2xl font-bold font-poppins">Arsip Surat</h1>
             <div className="flex items-center gap-3 font-poppins font-semibold">
               <span>Divisi Surat</span>
               <svg

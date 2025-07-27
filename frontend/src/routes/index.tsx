@@ -79,10 +79,7 @@ export default function AppRoutes() {
       <Route path="/login" element={<LoginRoute />} />
 
       {/* route "/register" */}
-      <Route
-        path="/register"
-        element={isAuthenticated ? <Navigate to="/login" /> : <Register />}
-      />
+      <Route path="/register" element={<Register />} />
 
       {/* route admin */}
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
