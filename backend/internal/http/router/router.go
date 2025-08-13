@@ -7,75 +7,97 @@ import (
 	"website-penyuratan-smk-kartoharjo/pkg/route"
 )
 
-var(
+var (
 	adminOnly = []string{"admin"}
 	// headmasterOnly = []string{"headmaster"}
-	dvPersuratanOnly = []string{"headmaster"}
+	// dvPersuratanOnly = []string{"headmaster"}
 	allRoles = []string{"admin", "headmaster", "dvpersuratan"}
 )
 
-func PublicRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandler) []route.Route{
+func PublicRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandler) []route.Route {
 	return []route.Route{
 		{
-			Method: http.MethodPost,
-			Path: "/login",
+			Method:  http.MethodPost,
+			Path:    "/login",
 			Handler: userHandler.Login,
-			Roles: allRoles,
-			
+			Roles:   allRoles,
 		},
 		{
-			Method: http.MethodPost,
-			Path: "/register",
+			Method:  http.MethodPost,
+			Path:    "/register",
 			Handler: userHandler.Register,
-			Roles: allRoles,
+			Roles:   allRoles,
 		},
-				{
-			Method: http.MethodGet,
-			Path: "/users",
+		{
+			Method:  http.MethodGet,
+			Path:    "/users",
 			Handler: userHandler.GetUsers,
-			Roles: allRoles,
+			Roles:   allRoles,
 		},
 		{
-			Method: http.MethodPost,
-			Path: "/users",
+			Method:  http.MethodPost,
+			Path:    "/users",
 			Handler: userHandler.CreateUser,
-			Roles: allRoles,
+			Roles:   allRoles,
 		},
-			{
-			Method: http.MethodGet,
-			Path: "/users/:id",
+		{
+			Method:  http.MethodGet,
+			Path:    "/users/:id",
 			Handler: userHandler.GetByID,
-			Roles: allRoles,
+			Roles:   allRoles,
 		},
 		{
-			Method: http.MethodPut,
-			Path: "/users/:id",
+			Method:  http.MethodPut,
+			Path:    "/users/:id",
 			Handler: userHandler.UpdateUser,
-			Roles: allRoles,
+			Roles:   allRoles,
 		},
 		{
-			Method: http.MethodDelete,
-			Path: "/users/:id",
+			Method:  http.MethodDelete,
+			Path:    "/users/:id",
 			Handler: userHandler.DeleteUser,
-			Roles: allRoles,
+			Roles:   allRoles,
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/mails",
+			Handler: mailHandler.CreateMail,
+			Roles:   allRoles,
+		},
+		{
+			Method:  http.MethodGet,
+			Path:    "/mails",
+			Handler: mailHandler.GetAllMail,
+			Roles:   allRoles,
+		},
+		{
+			Method:  http.MethodPut,
+			Path:    "/mails/:id",
+			Handler: mailHandler.UpdateMail,
+			Roles:   allRoles,
+		}, {
+			Method:  http.MethodGet,
+			Path:    "/mails/:id",
+			Handler: mailHandler.GetMail,
+			Roles:   allRoles,
 		},
 	}
 }
 
-func PrivateRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandler) []route.Route{
+func PrivateRoutes(userHandler handler.UserHandler, mailHandler handler.MailHandler) []route.Route {
 	return []route.Route{
-	
+
+		// {
+		// 	Method:  http.MethodGet,
+		// 	Path:    "/mails",
+		// 	Handler: mailHandler.GetAllMail,
+		// 	Roles:   adminOnly,
+		// },
 		{
-			Method: http.MethodGet,
-			Path: "/mails",
-			Handler: mailHandler.GetAllMail,
-			Roles: adminOnly,
-		},
-		{
-			Method: http.MethodPost,
-			Path: "/mails",
-			Handler: mailHandler.CreateMail,
-			Roles: dvPersuratanOnly,
+			Method:  http.MethodDelete,
+			Path:    "/users/:id",
+			Handler: userHandler.DeleteUser,
+			Roles:   allRoles,
 		},
 	}
 }
