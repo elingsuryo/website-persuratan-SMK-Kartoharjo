@@ -26,6 +26,11 @@ const SuratMasuk = () => {
   const filteredMails = mails?.filter((mail: Mail) =>
     mail.judul.toLowerCase().includes(search.toLowerCase())
   );
+  const filteredJenisMails = mails
+    ?.filter((mail: Mail) => mail.jenis.toLowerCase() === "surat masuk")
+    .filter((mail: Mail) =>
+      mail.judul.toLowerCase().includes(search.toLowerCase())
+    );
 
   return (
     <div className="top-0 z-50 w-full">
@@ -115,14 +120,14 @@ const SuratMasuk = () => {
                   Deskripsi
                 </th>
                 <th className="px-6 py-3 border-e border-[#8F8F8F]">
-                  Tgl Upload
+                  Kategori Surat
                 </th>
                 <th className="px-6 py-3 border-e border-[#8F8F8F]">File</th>
                 <th className="px-6 py-3">Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {filteredMails?.map((mail: Mail, index: number) => (
+              {filteredJenisMails?.map((mail: Mail, index: number) => (
                 <tr
                   key={mail.id}
                   className="bg-white border-b border-[#8F8F8F]"
@@ -137,7 +142,7 @@ const SuratMasuk = () => {
                     {mail.deskripsi}
                   </td>
                   <td className="px-6 py-3 border-e border-[#8F8F8F]">
-                    {mail.tgl_upload}
+                    {mail.kategori}
                   </td>
                   <td className="px-6 py-3 border-e border-[#8F8F8F]">
                     {mail.file ? (

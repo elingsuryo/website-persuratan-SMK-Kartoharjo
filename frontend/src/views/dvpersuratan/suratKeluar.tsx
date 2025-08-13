@@ -1,21 +1,36 @@
 import "../../index.css";
-
-import { FC } from "react";
-
 import SidebarMenu from "../../component/sidebarMenu";
-
-import { useUsers, User } from "../../hooks/user/useUsers";
-
+import { Mail, useMail } from "../../hooks/mail/useMail";
+import { useMailDelete } from "../../hooks/mail/useMailDelete"; // Pastikan import ini benar
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Link } from "react-router";
+const BASE_FILE_URL = "http://localhost:8081/read/";
 
-const suratKeluar: FC = () => {
-  const { data: users } = useUsers();
+const suratKeluar = () => {
+  const { data: mails } = useMail();
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMailDelete();
+  const [search] = useState("");
 
-  //initialize useQueryClient
+  const handleDelete = (id: number) => {
+    if (confirm("Apakah anda yakin ingin menghapus surat ini?")) {
+      mutate(id, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["mails"] });
+        },
+      });
+    }
+  };
 
-  //initialize useUserDelete
-
-  //handle delete user
+  const filteredMails = mails?.filter((mail: Mail) =>
+    mail.judul.toLowerCase().includes(search.toLowerCase())
+  );
+  const filteredJenisMails = mails
+    ?.filter((mail: Mail) => mail.jenis.toLowerCase() === "surat keluar")
+    .filter((mail: Mail) =>
+      mail.judul.toLowerCase().includes(search.toLowerCase())
+    );
 
   return (
     <div className="top-0 z-50 w-full">
@@ -25,14 +40,9 @@ const suratKeluar: FC = () => {
       <main className="flex-1 overflow-auto p-4 sm:ml-64">
         <header className="flex mb-6 border-b w-full">
           <div className="flex items-center justify-between w-full px-8 py-4">
-            <h1 className="text-2xl font-bold font-poppins">Kirim Surat</h1>
+            <h1 className="text-2xl font-bold font-poppins">Arsip Surat</h1>
             <div className="flex items-center gap-3 font-poppins font-semibold">
               <span>Divisi Surat</span>
-              {/* <img
-                src="https://via.placeholder.com/32"
-                className="rounded-full w-8 h-8"
-                alt="Profile"
-              /> */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 48 48"
@@ -69,106 +79,129 @@ const suratKeluar: FC = () => {
           </div>
         </header>
 
-        <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
+        {/* Tombol Tambah Data */}
+        <div className="flex items-center justify-between flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
           <div className="px-5 py-2.5 me-2 mb-2 text-[#899290] flex items-center gap-2">
-            <svg
-              width="8"
-              height="4"
-              viewBox="0 0 8 4"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg width="8" height="4" viewBox="0 0 8 4" fill="none">
               <path d="M4 4L7.4641 0.25H0.535898L4 4Z" fill="#D9D9D9" />
             </svg>
             Filter
           </div>
           <div className="relative">
             <button
+              onClick={() =>
+                (window.location.href = "/dvpersuratan/uploadsurat")
+              }
               type="button"
-              className="focus:outline-none flex items-center gap-2 text-white bg-[#0DC300] focus:ring-4 focus:ring-red-300 font-small rounded-[5px] text-sm px-5 py-2.5 me-2 mb-2 dark:bg-[#0DC300] dark:hover:bg-[#0DC300] dark:focus:ring-[#0DC300]"
+              className="focus:outline-none flex items-center gap-2 text-white bg-[#0DC300] font-small rounded-[5px] text-sm px-5 py-2.5"
             >
-              <div>
-                <svg
-                  width="21"
-                  height="21"
-                  viewBox="0 0 21 21"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10.5 4.375V16.625M4.375 10.5H16.625"
-                    stroke="white"
-                    stroke-width="4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </div>
-              <Link to="/admin/tambah-user">Tambah Data</Link>
+              <svg width="21" height="21" viewBox="0 0 21 21" fill="none">
+                <path
+                  d="M10.5 4.375V16.625M4.375 10.5H16.625"
+                  stroke="white"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Upload Surat
             </button>
           </div>
         </div>
+
+        {/* Tabel Surat */}
         <div className="relative overflow-x-auto sm:rounded-lg drop-shadow-2xl backdrop-blur-3xl">
-          <table className="w-full text-sm text-left rtl:text-right">
-            <thead className="text-xs text-bold uppercase bg-[#D9E8FF] backdrop-blur-2xl drop-shadow-md">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs uppercase bg-[#D9E8FF]">
               <tr>
-                <th scope="col" className="p-4 border-e border-[#8F8F8F]">
-                  No
+                <th className="p-4 border-e border-[#8F8F8F]">No</th>
+                <th className="px-6 py-3 border-e border-[#8F8F8F]">Judul</th>
+                <th className="px-6 py-3 border-e border-[#8F8F8F]">
+                  Deskripsi
                 </th>
-                <th scope="col" className="px-6 py-3 border-e border-[#8F8F8F]">
-                  Name
+                <th className="px-6 py-3 border-e border-[#8F8F8F]">
+                  Kategori Surat
                 </th>
-                <th scope="col" className="px-6 py-3 border-e border-[#8F8F8F]">
-                  Whatsapp
-                </th>
-                <th scope="col" className="px-6 py-3 border-e border-[#8F8F8F]">
-                  Keterangan
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Aksi
-                </th>
+                <th className="px-6 py-3 border-e border-[#8F8F8F]">File</th>
+                <th className="px-6 py-3">Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {users?.map((user: User) => (
+              {filteredJenisMails?.map((mail: Mail, index: number) => (
                 <tr
-                  className="bg-white border-b  border-[#8F8F8F]"
-                  key={user.id}
+                  key={mail.id}
+                  className="bg-white border-b border-[#8F8F8F]"
                 >
                   <td className="w-4 p-3 border-e border-[#8F8F8F]">
-                    {users.indexOf(user) + 1}
+                    {index + 1}
                   </td>
-                  <th className=" px-6 py-3 border-e border-[#8F8F8F]">
-                    {user.full_name}
-                  </th>
-                  <td className="px-6 py-3  border-e border-[#8F8F8F]">
-                    {user.whatsapp}
+                  <td className="px-6 py-3 border-e border-[#8F8F8F] font-semibold">
+                    {mail.judul}
                   </td>
                   <td className="px-6 py-3 border-e border-[#8F8F8F]">
-                    {user.role}
+                    {mail.deskripsi}
+                  </td>
+                  <td className="px-6 py-3 border-e border-[#8F8F8F]">
+                    {mail.kategori}
+                  </td>
+                  <td className="px-6 py-3 border-e border-[#8F8F8F]">
+                    {mail.file ? (
+                      <a
+                        href={`${BASE_FILE_URL}${mail.file}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        <svg
+                          width="40"
+                          height="40"
+                          viewBox="0 0 40 40"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M21.6667 3.33331H10.0001C9.11603 3.33331 8.26818 3.6845 7.64306 4.30962C7.01794 4.93474 6.66675 5.78259 6.66675 6.66665V33.3333C6.66675 34.2174 7.01794 35.0652 7.64306 35.6903C8.26818 36.3155 9.11603 36.6666 10.0001 36.6666H30.0001C30.8841 36.6666 31.732 36.3155 32.3571 35.6903C32.9822 35.0652 33.3334 34.2174 33.3334 33.3333V15M21.6667 3.33331L33.3334 15M21.6667 3.33331V15H33.3334"
+                            stroke="#1E1E1E"
+                            stroke-width="4"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </a>
+                    ) : (
+                      <span className="text-gray-400 italic">
+                        Tidak ada file
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-3">
-                    <button
-                      type="button"
-                      className="focus:outline-none flex items-center gap-2 text-white bg-[#0DC300] hover:bg-[#7dc878] focus:ring-4 focus:ring-green-300 font-small rounded-lg text-sm px-5 py-2.5 me-1 mb-2 dark:bg-[#0DC300] dark:hover:bg-[#7dc878] dark:focus:ring-green-800"
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                    <Link to={`/dvpersuratan/editsurat/${mail.id}`}>
+                      <button
+                        type="button"
+                        className="text-white bg-[#0DC300] hover:bg-[#7dc878] rounded-lg text-sm px-5 py-2.5 me-1 mb-2"
                       >
-                        <path
-                          d="M9.99984 6.66663C11.6387 6.66663 13.2533 6.99649 14.8436 7.65621C16.4339 8.31593 17.8471 9.30552 19.0832 10.625C19.2498 10.7916 19.3332 10.9861 19.3332 11.2083C19.3332 11.4305 19.2498 11.625 19.0832 11.7916L17.1665 13.6666C17.0137 13.8194 16.8366 13.9027 16.6353 13.9166C16.4339 13.9305 16.2498 13.875 16.0832 13.75L13.6665 11.9166C13.5554 11.8333 13.4721 11.7361 13.4165 11.625C13.3609 11.5138 13.3332 11.3888 13.3332 11.25V8.87496C12.8054 8.70829 12.2637 8.57635 11.7082 8.47913C11.1526 8.3819 10.5832 8.33329 9.99984 8.33329C9.4165 8.33329 8.84706 8.3819 8.2915 8.47913C7.73595 8.57635 7.19428 8.70829 6.6665 8.87496V11.25C6.6665 11.3888 6.63873 11.5138 6.58317 11.625C6.52761 11.7361 6.44428 11.8333 6.33317 11.9166L3.9165 13.75C3.74984 13.875 3.56581 13.9305 3.36442 13.9166C3.16303 13.9027 2.98595 13.8194 2.83317 13.6666L0.916504 11.7916C0.749837 11.625 0.666504 11.4305 0.666504 11.2083C0.666504 10.9861 0.749837 10.7916 0.916504 10.625C2.13873 9.30552 3.54845 8.31593 5.14567 7.65621C6.74289 6.99649 8.36095 6.66663 9.99984 6.66663Z"
-                          fill="white"
-                        />
-                      </svg>
-                      <Link to={"https://wa.me/" + user.whatsapp}>Hubungi</Link>
+                        Edit Data
+                      </button>
+                    </Link>
+                    <br />
+                    <button
+                      onClick={() => handleDelete(mail.id)}
+                      disabled={isPending}
+                      type="button"
+                      className="text-white bg-red-700 hover:bg-red-800 rounded-lg text-sm px-5 py-2.5 me-1 mb-2"
+                    >
+                      {isPending ? "Menghapus..." : "Hapus"}
                     </button>
                   </td>
                 </tr>
               ))}
+              {filteredMails?.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="text-center py-6 text-gray-500">
+                    Tidak ada data ditemukan.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

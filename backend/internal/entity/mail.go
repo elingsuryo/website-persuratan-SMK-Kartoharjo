@@ -5,9 +5,11 @@ type Mail struct {
 	Judul      string `json:"judul"`
 	Deskripsi  string `json:"deskripsi"`
 	Kategori   string `json:"kategori"`
+	Jenis      string `json:"jenis"`
 	TglUpload  string `json:"tgl_upload"`
 	File       string `json:"file"`
 	Note       string `json:"note"`
+	Tujuan     string `json:"tujuan"`
 	Keterangan string `json:"keterangan"`
 	Accept     bool   `json:"accept"`
 }

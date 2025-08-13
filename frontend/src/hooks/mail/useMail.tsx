@@ -14,6 +14,7 @@ export interface Mail {
   judul: string;
   deskripsi: string;
   kategori: string;
+  jenis: string;
   tgl_upload: string;
   note: string;
   file: string;

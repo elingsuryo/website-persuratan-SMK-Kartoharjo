@@ -9,9 +9,11 @@ type GetAllMailResponse struct {
 	Judul      string `json:"judul"`
 	Deskripsi  string `json:"deskripsi"`
 	Kategori   string `json:"kategori"`
+	Jenis      string `json:"jenis"`
 	TglUpload  string `json:"tgl_upload"`
 	File       string `json:"file"`
 	Keterangan string `json:"keterangan"`
+	Tujuan     string `json:"tujuan"`
 	Note       string `json:"note"`
 	Accept     bool   `json:"accept"`
 }
@@ -20,6 +22,7 @@ type CreateMailRequest struct {
 	Judul      string `form:"judul"`
 	Deskripsi  string `form:"deskripsi"`
 	Kategori   string `form:"kategori"`
+	Jenis      string `form:"jenis"`
 	TglUpload  string `form:"tgl_upload"`
 	Keterangan string `form:"keterangan"`
 	File       string `form:"file"`
@@ -30,6 +33,7 @@ type UpdateMailRequest struct {
 	Judul     string `json:"judul"`
 	Deskripsi string `json:"deskripsi"`
 	Kategori  string `json:"kategori"`
+	Jenis     string `json:"jenis"`
 	TglUpload string `json:"tgl_upload"`
 	File      string `json:"file,omitempty"`
 	Accept    bool   `json:"accept"`
@@ -39,6 +43,7 @@ type SignedMailRequest struct {
 	ID         int64  `param:"id" validate:"required"`
 	File       string `json:"file,omitempty"`
 	Keterangan string `json:"keterangan"`
+	Tujuan     string `json:"tujuan"`
 	Accept     bool   `json:"accept"`
 }
 

@@ -67,7 +67,7 @@ func (s *userService) Register(ctx context.Context, req dto.UserRegisterRequest)
 	user := new(entity.User)
 	user.Email = req.Email
 	user.FullName = req.FullName
-	user.Role = "headmaster"
+	user.Role = "dvpersuratan"
 
 	// exist, err := s.userRepository.GetByEmail(ctx, req.Email)
 	// if err == nil && exist != nil {

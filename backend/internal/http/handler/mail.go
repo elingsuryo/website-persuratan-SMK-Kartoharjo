@@ -54,6 +54,7 @@ func (h *MailHandler) CreateMail(ctx echo.Context) error {
 	judul := ctx.FormValue("judul")
 	deskripsi := ctx.FormValue("deskripsi")
 	kategori := ctx.FormValue("kategori")
+	jenis := ctx.FormValue("jenis")
 	tglUpload := ctx.FormValue("tgl_upload")
 
 	// Ambil file dari form
@@ -89,6 +90,7 @@ func (h *MailHandler) CreateMail(ctx echo.Context) error {
 		Judul:     judul,
 		Deskripsi: deskripsi,
 		Kategori:  kategori,
+		Jenis:     jenis,
 		TglUpload: tglUpload,
 		File:      filePath, // hanya path-nya
 	}
@@ -115,6 +117,7 @@ func (h *MailHandler) UpdateMail(ctx echo.Context) error {
     judul := ctx.FormValue("judul")
     deskripsi := ctx.FormValue("deskripsi")
     kategori := ctx.FormValue("kategori")
+	jenis := ctx.FormValue("jenis")
     tglUpload := ctx.FormValue("tgl_upload")
 
     var filePath string
@@ -152,6 +155,7 @@ func (h *MailHandler) UpdateMail(ctx echo.Context) error {
         Judul:     judul,
         Deskripsi: deskripsi,
         Kategori:  kategori,
+		Jenis:     jenis,
         TglUpload: tglUpload,
         File:      filePath, // bisa kosong jika tidak diupdate
     }
@@ -225,6 +229,7 @@ func (h *MailHandler) SignedMail(ctx echo.Context) error {
 		ID:         int64(id),
 		Accept:     true,
 		Keterangan: "Diterima",
+		Tujuan:     surat.Tujuan,
 		File:       signedFilePath,
 	}
 	err = h.mailservice.Signed(ctx.Request().Context(), req)

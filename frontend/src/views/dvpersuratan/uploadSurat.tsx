@@ -14,6 +14,7 @@ const DvPersuratan = () => {
   const [judul, setJudul] = useState<string>("");
   const [deskripsi, setDeskripsi] = useState<string>("");
   const [kategori, setKategori] = useState<string>("");
+  const [jenis, setJenis] = useState<string>("");
   const [tgl_upload, setTglUpload] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
 
@@ -141,6 +142,25 @@ const DvPersuratan = () => {
                   className="col-span-2 text-base font-normal text-black"
                   htmlFor="pengirim"
                 >
+                  Jenis
+                </label>
+                <select
+                  value={jenis}
+                  onChange={(e) => setJenis(e.target.value)}
+                  className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option disabled selected>
+                    pilih opsi
+                  </option>
+                  <option value={"Surat Masuk"}>Surat Masuk</option>
+                  <option value={"Surat Keluar"}>Surat Keluar</option>
+                </select>
+              </div>
+              <div className="grid grid-cols-12 items-center gap-4 mb-4">
+                <label
+                  className="col-span-2 text-base font-normal text-black"
+                  htmlFor="pengirim"
+                >
                   Kategori
                 </label>
                 <select
@@ -151,8 +171,13 @@ const DvPersuratan = () => {
                   <option disabled selected>
                     pilih opsi
                   </option>
-                  <option value={"Surat Masuk"}>Surat Keterangan</option>
-                  <option value={"Surat Keluar"}>Surat Pelatihan</option>
+                  <option value={"Surat Kesiswaan"}>Surat Kesiswaan</option>
+                  <option value={"Surat Kurikulum"}>Surat Kurikulum</option>
+                  <option value={"Surat Umum"}>Surat Umum</option>
+                  <option value={"Surat Kepegawaian"}>Surat Kepegawaian</option>
+                  <option value={"Surat Sarana Prasarana"}>
+                    Surat Sarana Prasarana
+                  </option>
                 </select>
               </div>
               <div className="grid grid-cols-12 items-center gap-4 mb-4">

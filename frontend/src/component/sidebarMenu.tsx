@@ -1,8 +1,11 @@
 import React from "react";
 import "../index.css";
 import { useLogout } from "../hooks/auth/useLogout";
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react"; // Optional icons
 
 const sidebarMenu: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const logout = useLogout();
   return (
     <div className="w-[251px] h-[832px] bg-[#32538a] flex flex-col text-white select-none">
@@ -49,25 +52,50 @@ const sidebarMenu: React.FC = () => {
                 <span className="ms-3">Dashboard</span>
               </a>
             </li>
-            <li className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-              <a
-                href="/dvpersuratan/suratmasuk"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+            <li>
+              <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
-                <svg
-                  width="21"
-                  height="21"
-                  viewBox="0 0 21 21"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M3.5 17.5C3.01875 17.5 2.60313 17.3323 2.25313 16.9969C1.91771 16.6469 1.75 16.2313 1.75 15.75V5.25C1.75 4.76875 1.91771 4.36042 2.25313 4.025C2.60313 3.675 3.01875 3.5 3.5 3.5H17.5C17.9813 3.5 18.3896 3.675 18.725 4.025C19.075 4.36042 19.25 4.76875 19.25 5.25V15.75C19.25 16.2313 19.075 16.6469 18.725 16.9969C18.3896 17.3323 17.9813 17.5 17.5 17.5H3.5ZM10.5 11.375L17.5 7V5.25L10.5 9.625L3.5 5.25V7L10.5 11.375Z"
-                    fill="#FEF7FF"
-                  />
-                </svg>
-                <span className="ms-3">Arsip Surat</span>
-              </a>
+                <div className="flex items-center">
+                  <svg
+                    width="21"
+                    height="21"
+                    viewBox="0 0 21 21"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3.5 17.5C3.01875 17.5 2.60313 17.3323 2.25313 16.9969C1.91771 16.6469 1.75 16.2313 1.75 15.75V5.25C1.75 4.76875 1.91771 4.36042 2.25313 4.025C2.60313 3.675 3.01875 3.5 3.5 3.5H17.5C17.9813 3.5 18.3896 3.675 18.725 4.025C19.075 4.36042 19.25 4.76875 19.25 5.25V15.75C19.25 16.2313 19.075 16.6469 18.725 16.9969C18.3896 17.3323 17.9813 17.5 17.5 17.5H3.5ZM10.5 11.375L17.5 7V5.25L10.5 9.625L3.5 5.25V7L10.5 11.375Z"
+                      fill="#FEF7FF"
+                    />
+                  </svg>
+                  <span className="ms-3">Arsip Surat</span>
+                </div>
+                {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </button>
+
+              {isOpen && (
+                <ul className="ml-8 mt-2 space-y-1">
+                  <li>
+                    <a
+                      href="/dvpersuratan/suratmasuk"
+                      className="block px-2 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600"
+                    >
+                      Surat Masuk
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/dvpersuratan/suratkeluar"
+                      className="block px-2 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600"
+                    >
+                      Surat Keluar
+                    </a>
+                  </li>
+                </ul>
+              )}
             </li>
             <li>
               <a

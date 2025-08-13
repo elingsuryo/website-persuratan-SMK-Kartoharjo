@@ -43,14 +43,17 @@ const Register: FC = () => {
         email,
         password,
         full_name,
-        role: "headmaster",
+        role: "dvpersuratan",
       },
       {
         onSuccess: (data: any) => {
-          setUser({ role: data.data.role });
-          setIsAuthenticated(false);
+          setIsAuthenticated(true);
+          setUser({
+            role: data.data.role,
+          });
+          navigate(`/${data.data.role.toLowerCase()}/dashboard`);
+          // setIsAuthenticated(false);
           // Redirect to login page
-          navigate("/login");
         },
         onError: (error: any) => {
           //set errors to state "errors"

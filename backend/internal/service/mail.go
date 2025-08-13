@@ -40,6 +40,7 @@ func (s mailService) Create(ctx context.Context, req dto.CreateMailRequest) erro
 		Judul:     req.Judul,
 		Deskripsi: req.Deskripsi,
 		Kategori:  req.Kategori,
+		Jenis:     req.Jenis,
 		TglUpload: req.TglUpload,
 		File:      req.File,
 		Keterangan: "Diproses",
@@ -68,6 +69,9 @@ func (s mailService) Update(ctx context.Context, req dto.UpdateMailRequest) erro
 	if req.Kategori != "" {
 		mails.Kategori = req.Kategori
 	}
+	if req.Jenis != "" {
+		mails.Jenis = req.Jenis
+	}
 	
 	return s.mailsRepository.Update(ctx, mails)
 }
@@ -84,6 +88,7 @@ func (s mailService) Signed(ctx context.Context, req dto.SignedMailRequest) erro
 	if req.File != "" {
 		mails.File = req.File
 	}
+	mails.Tujuan = req.Tujuan
 	if req.Keterangan != "" {
 		mails.Keterangan = "Diterima"
 	}
