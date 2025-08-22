@@ -20,9 +20,18 @@ const SuratMasuk = () => {
   const { mutate, isPending } = useMailSigned();
   const { mutate: mutateReject } = useMailRejected();
   const [note, setCatatan] = useState("");
+  const [tujuan, setTujuan] = useState("");
   useEffect(() => {
     mail;
   }, [mail]);
+
+  const handleSigned = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!tujuan) {
+      alert("Tujuan tidak boleh kosong");
+      return;
+    }
+  };
 
   const handleReject = (e: React.FormEvent, id: number) => {
     e.preventDefault();
@@ -284,6 +293,29 @@ const SuratMasuk = () => {
                           </svg>
                           {isPending ? "Menandatangani..." : "Terima"}
                         </button>
+                        {showForm === mail.id && (
+                          <form
+                            onSubmit={(e) => handleSigned(e)}
+                            className="mt-2 p-4 border border-red-200 rounded-md bg-red-50"
+                          >
+                            <label className="block mb-2 text-sm font-medium text-red-700">
+                              Dikirim ke :
+                            </label>
+                            <textarea
+                              value={tujuan}
+                              onChange={(e) => setTujuan(e.target.value)}
+                              className="w-full p-2 border border-red-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                              placeholder="Tulis nama yang ingin dituju di sini..."
+                              rows={4}
+                            />
+                            <button
+                              type="submit"
+                              className="mt-3 px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800"
+                            >
+                              Kirim
+                            </button>
+                          </form>
+                        )}
                         <br />
                         <button
                           onClick={() => setShowForm(mail.id)}

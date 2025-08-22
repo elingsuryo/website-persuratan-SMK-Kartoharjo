@@ -11,12 +11,6 @@ import { Link } from "react-router";
 const listKontak: FC = () => {
   const { data: users } = useUsers();
 
-  //initialize useQueryClient
-
-  //initialize useUserDelete
-
-  //handle delete user
-
   return (
     <div className="top-0 z-50 w-full">
       <aside className="fixed z-40 w-64 h-screen">

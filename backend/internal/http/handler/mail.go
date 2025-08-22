@@ -241,8 +241,6 @@ func (h *MailHandler) SignedMail(ctx echo.Context) error {
 }
 
 
-
-
 func (h *MailHandler) RejectMail(ctx echo.Context) error {
 	var req dto.RejectMailRequest
 	if err := ctx.Bind(&req); err != nil {

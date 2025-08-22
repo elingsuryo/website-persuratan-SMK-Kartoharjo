@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 interface MailSigned {
   id: number;
   file: string;
+  tujuan: string;
   accept: boolean;
 }
 

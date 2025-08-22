@@ -170,7 +170,7 @@ const DvPersuratan = () => {
                       </p>
                     </div>
                     <div className="text-green-500 text-sm font-medium">
-                      Ditandatangani
+                      Dikirim ke : {mail.tujuan}
                     </div>
                   </div>
                 ))}
