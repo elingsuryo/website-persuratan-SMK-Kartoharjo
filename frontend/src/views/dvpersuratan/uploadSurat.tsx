@@ -31,6 +31,7 @@ const DvPersuratan = () => {
     formData.append("judul", judul);
     formData.append("deskripsi", deskripsi);
     formData.append("kategori", kategori);
+    formData.append("jenis", jenis);
     formData.append("tgl_upload", tgl_upload);
 
     if (file) {
@@ -149,9 +150,7 @@ const DvPersuratan = () => {
                   onChange={(e) => setJenis(e.target.value)}
                   className="col-span-5 border border-gray-300 rounded-md py-2 px-3 text-[#B3B3B3] text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option disabled selected>
-                    pilih opsi
-                  </option>
+                  <option>pilih opsi</option>
                   <option value={"Surat Masuk"}>Surat Masuk</option>
                   <option value={"Surat Keluar"}>Surat Keluar</option>
                 </select>

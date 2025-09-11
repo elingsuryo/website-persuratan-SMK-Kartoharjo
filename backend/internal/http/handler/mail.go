@@ -229,7 +229,6 @@ func (h *MailHandler) SignedMail(ctx echo.Context) error {
 		ID:         int64(id),
 		Accept:     true,
 		Keterangan: "Diterima",
-		Tujuan:     surat.Tujuan,
 		File:       signedFilePath,
 	}
 	err = h.mailservice.Signed(ctx.Request().Context(), req)
@@ -240,6 +239,18 @@ func (h *MailHandler) SignedMail(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, response.SuccessResponse("Successfully Signed", nil))
 }
 
+func (h *MailHandler) SendMail(ctx echo.Context) error {
+	var req dto.SendMailRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.JSON(http.StatusBadRequest, response.ErrorResponse(http.StatusBadRequest, err.Error()))
+	}
+
+	err := h.mailservice.Send(ctx.Request().Context(), req)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, response.ErrorResponse(http.StatusInternalServerError, err.Error()))
+	}
+	return ctx.JSON(http.StatusOK, response.SuccessResponse("successfully send mail", nil))
+}
 
 func (h *MailHandler) RejectMail(ctx echo.Context) error {
 	var req dto.RejectMailRequest

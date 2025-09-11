@@ -6,7 +6,7 @@ import { Link } from "react-router";
 
 import "../../index.css";
 
-import logo from "../../assets/logo smk.png";
+import logo from "../../assets/logo_smk.png";
 
 import bg1 from "../../assets/bg1.png";
 

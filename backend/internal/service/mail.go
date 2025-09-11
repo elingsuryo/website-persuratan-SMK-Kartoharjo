@@ -15,6 +15,7 @@ type MailService interface {
 	Update(ctx context.Context, req dto.UpdateMailRequest) error
     Delete(ctx context.Context, mails *entity.Mail) error
 	Signed(ctx context.Context, req dto.SignedMailRequest) error
+	Send(ctx context.Context, req dto.SendMailRequest) error
 	Reject(ctx context.Context, req dto.RejectMailRequest) error
 }
 
@@ -88,11 +89,19 @@ func (s mailService) Signed(ctx context.Context, req dto.SignedMailRequest) erro
 	if req.File != "" {
 		mails.File = req.File
 	}
-	mails.Tujuan = req.Tujuan
 	if req.Keterangan != "" {
 		mails.Keterangan = "Diterima"
 	}
 	mails.Accept = true
+	return s.mailsRepository.Update(ctx, mails)
+}
+
+func (s mailService) Send(ctx context.Context, req dto.SendMailRequest) error{
+	mails, err := s.mailsRepository.GetByID(ctx, req.ID)
+	if err != nil {
+		return err
+	}
+	mails.Tujuan = req.Tujuan
 	return s.mailsRepository.Update(ctx, mails)
 }
 

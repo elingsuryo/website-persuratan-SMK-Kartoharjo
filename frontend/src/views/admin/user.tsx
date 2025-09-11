@@ -8,6 +8,7 @@ import { useUserDelete } from "../../hooks/user/useUserDelete";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { useLogout } from "../../hooks/auth/useLogout";
+import logo from "../../assets/logo_smk.png";
 
 const KelolaUser: FC = () => {
   const logout = useLogout();
@@ -36,20 +37,7 @@ const KelolaUser: FC = () => {
       <aside className="fixed z-40 w-64 h-screen">
         <div className="w-[251px] h-[832px] bg-[#32538a] flex flex-col text-white select-none">
           <div className="p-6 border-[#2a4773] flex justify-center">
-            <svg
-              width="57"
-              height="72"
-              viewBox="0 0 57 72"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M47.9296 62.5483C53.0096 57.2597 56.1603 49.9458 56.1603 41.8755V30.3337H56.1443V22.9074H28.0723V35.5417H44.0229V41.8603H44.0083C44.0083 46.441 42.2163 50.5886 39.3443 53.5951C36.4563 56.6017 32.4723 58.4492 28.0723 58.4492V45.8135C23.6713 45.8135 19.6875 43.966 16.8 40.9594C13.9125 37.9542 12.1369 33.8066 12.1369 29.2246C12.1369 24.6425 13.9281 20.4963 16.8 17.4897C19.6875 14.4831 23.6713 12.6342 28.0723 12.6342V-0.000106812C20.3208 -0.000106812 13.3104 3.27853 8.23027 8.56851C3.15 13.8571 0 21.1543 0 29.2246C0 37.2949 3.15 44.6087 8.23027 49.8973C13.3104 55.1859 20.3364 58.4659 28.0883 58.4659V71.1016C34.0176 71.1016 39.5296 69.1888 44.0696 65.9088C45.4443 64.9122 46.7416 63.7864 47.9296 62.5483Z"
-                fill="white"
-              />
-            </svg>
+            <img src={logo} className="h-[70px] w-[75px]" alt="Logo SMK" />
           </div>
           <nav className="flex-1 flex flex-col gap-60">
             <div className="ml-4">

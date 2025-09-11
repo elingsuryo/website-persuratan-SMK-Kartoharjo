@@ -43,8 +43,12 @@ type SignedMailRequest struct {
 	ID         int64  `param:"id" validate:"required"`
 	File       string `json:"file,omitempty"`
 	Keterangan string `json:"keterangan"`
-	Tujuan     string `json:"tujuan"`
 	Accept     bool   `json:"accept"`
+}
+
+type SendMailRequest struct {
+	ID     int64  `param:"id" validate:"required"`
+	Tujuan string `json:"tujuan"`
 }
 
 type RejectMailRequest struct {

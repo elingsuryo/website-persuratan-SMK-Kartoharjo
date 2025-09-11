@@ -1,7 +1,7 @@
 import "../../index.css";
 import SidebarMenu from "../../component/sidebarMenu";
 import { Mail, useMail } from "../../hooks/mail/useMail";
-import { useMailDelete } from "../../hooks/mail/useMailDelete"; // Pastikan import ini benar
+import { useMailDelete } from "../../hooks/mail/useMailDelete";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router";
@@ -12,6 +12,17 @@ const suratKeluar = () => {
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMailDelete();
   const [search] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState("Filter");
+
+  const options = [
+    "Semuanya",
+    "Surat Kesiswaan",
+    "Surat Kurikulum",
+    "Surat Umum",
+    "Surat Kepegawaian",
+    "Surat Sarana Prasarana",
+  ];
 
   const handleDelete = (id: number) => {
     if (confirm("Apakah anda yakin ingin menghapus surat ini?")) {
@@ -23,14 +34,31 @@ const suratKeluar = () => {
     }
   };
 
-  const filteredMails = mails?.filter((mail: Mail) =>
-    mail.judul.toLowerCase().includes(search.toLowerCase())
-  );
-  const filteredJenisMails = mails
-    ?.filter((mail: Mail) => mail.jenis.toLowerCase() === "surat keluar")
+  const filteredMails = mails
+    ?.filter((mail: Mail) => mail.jenis.toLowerCase() === "surat masuk")
     .filter((mail: Mail) =>
       mail.judul.toLowerCase().includes(search.toLowerCase())
-    );
+    )
+    .filter((mail: Mail) => {
+      if (selected === "Semuanya" || selected === "Filter") return true;
+
+      if (selected === "Kesiswaan") {
+        return mail.kategori.toLowerCase() === "kesiswaan";
+      }
+      if (selected === "Kurikulum") {
+        return mail.kategori.toLowerCase() === "kurikulum";
+      }
+      if (selected === "Kepegawaian") {
+        return mail.kategori.toLowerCase() === "kepegawaian";
+      }
+      if (selected === "Sarana Prasarana") {
+        return mail.kategori.toLowerCase() === "sarana prasarana";
+      }
+      if (selected === "Surat Umum") {
+        return mail.kategori.toLowerCase() === "surat umum";
+      }
+      return true;
+    });
 
   return (
     <div className="top-0 z-50 w-full">
@@ -40,7 +68,9 @@ const suratKeluar = () => {
       <main className="flex-1 overflow-auto p-4 sm:ml-64">
         <header className="flex mb-6 border-b w-full">
           <div className="flex items-center justify-between w-full px-8 py-4">
-            <h1 className="text-2xl font-bold font-poppins">Arsip Surat</h1>
+            <h1 className="text-2xl font-bold font-poppins">
+              Arsip Surat Keluar
+            </h1>
             <div className="flex items-center gap-3 font-poppins font-semibold">
               <span>Divisi Surat</span>
               <svg
@@ -82,10 +112,32 @@ const suratKeluar = () => {
         {/* Tombol Tambah Data */}
         <div className="flex items-center justify-between flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
           <div className="px-5 py-2.5 me-2 mb-2 text-[#899290] flex items-center gap-2">
-            <svg width="8" height="4" viewBox="0 0 8 4" fill="none">
-              <path d="M4 4L7.4641 0.25H0.535898L4 4Z" fill="#D9D9D9" />
-            </svg>
-            Filter
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="px-5 py-2.5 me-2 mb-2 text-[#899290] flex items-center gap-2 bg-white border rounded-md"
+            >
+              <svg width="8" height="4" viewBox="0 0 8 4" fill="none">
+                <path d="M4 4L7.4641 0.25H0.535898L4 4Z" fill="#D9D9D9" />
+              </svg>
+              {selected}
+            </button>
+
+            {isOpen && (
+              <div className="absolute  mt-2 w-40 bg-white border rounded-md shadow-lg z-[9999]">
+                {options.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => {
+                      setSelected(option);
+                      setIsOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div className="relative">
             <button
@@ -127,7 +179,7 @@ const suratKeluar = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredJenisMails?.map((mail: Mail, index: number) => (
+              {filteredMails?.map((mail: Mail, index: number) => (
                 <tr
                   key={mail.id}
                   className="bg-white border-b border-[#8F8F8F]"

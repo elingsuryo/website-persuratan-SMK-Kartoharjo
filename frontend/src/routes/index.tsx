@@ -32,6 +32,8 @@ import SuratMasukDV from "../views/dvpersuratan/suratMasuk.tsx";
 
 import SuratKeluarDV from "../views/dvpersuratan/suratKeluar.tsx";
 
+import ListKontak from "../views/dvpersuratan/listKontak.tsx";
+
 import EditSurat from "../views/dvpersuratan/editSurat.tsx";
 
 import TambahUser from "../views/admin/tambahUser.tsx";
@@ -129,6 +131,10 @@ export default function AppRoutes() {
       <Route
         path="/dvpersuratan/suratkeluar"
         element={isAuthenticated ? <SuratKeluarDV /> : <LoginRoute />}
+      />
+      <Route
+        path="/dvpersuratan/listkontak"
+        element={isAuthenticated ? <ListKontak /> : <LoginRoute />}
       />
     </Routes>
   );

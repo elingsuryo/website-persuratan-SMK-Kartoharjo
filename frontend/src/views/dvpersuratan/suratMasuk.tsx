@@ -12,6 +12,17 @@ const SuratMasuk = () => {
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMailDelete();
   const [search] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState("Filter");
+
+  const options = [
+    "Semuanya",
+    "Surat Kesiswaan",
+    "Surat Kurikulum",
+    "Surat Umum",
+    "Surat Kepegawaian",
+    "Surat Sarana Prasarana",
+  ];
 
   const handleDelete = (id: number) => {
     if (confirm("Apakah anda yakin ingin menghapus surat ini?")) {
@@ -23,14 +34,32 @@ const SuratMasuk = () => {
     }
   };
 
-  const filteredMails = mails?.filter((mail: Mail) =>
-    mail.judul.toLowerCase().includes(search.toLowerCase())
-  );
-  const filteredJenisMails = mails
+  // Filter berdasarkan jenis = "surat masuk" + kategori yang dipilih
+  const filteredMails = mails
     ?.filter((mail: Mail) => mail.jenis.toLowerCase() === "surat masuk")
     .filter((mail: Mail) =>
       mail.judul.toLowerCase().includes(search.toLowerCase())
-    );
+    )
+    .filter((mail: Mail) => {
+      if (selected === "Semuanya" || selected === "Filter") return true;
+
+      if (selected === "Kesiswaan") {
+        return mail.kategori.toLowerCase() === "kesiswaan";
+      }
+      if (selected === "Kurikulum") {
+        return mail.kategori.toLowerCase() === "kurikulum";
+      }
+      if (selected === "Kepegawaian") {
+        return mail.kategori.toLowerCase() === "kepegawaian";
+      }
+      if (selected === "Sarana Prasarana") {
+        return mail.kategori.toLowerCase() === "sarana prasarana";
+      }
+      if (selected === "Surat Umum") {
+        return mail.kategori.toLowerCase() === "surat umum";
+      }
+      return true;
+    });
 
   return (
     <div className="top-0 z-50 w-full">
@@ -40,7 +69,9 @@ const SuratMasuk = () => {
       <main className="flex-1 overflow-auto p-4 sm:ml-64">
         <header className="flex mb-6 border-b w-full">
           <div className="flex items-center justify-between w-full px-8 py-4">
-            <h1 className="text-2xl font-bold font-poppins">Arsip Surat</h1>
+            <h1 className="text-2xl font-bold font-poppins">
+              Arsip Surat Masuk
+            </h1>
             <div className="flex items-center gap-3 font-poppins font-semibold">
               <span>Divisi Surat</span>
               <svg
@@ -82,10 +113,34 @@ const SuratMasuk = () => {
         {/* Tombol Tambah Data */}
         <div className="flex items-center justify-between flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
           <div className="px-5 py-2.5 me-2 mb-2 text-[#899290] flex items-center gap-2">
-            <svg width="8" height="4" viewBox="0 0 8 4" fill="none">
-              <path d="M4 4L7.4641 0.25H0.535898L4 4Z" fill="#D9D9D9" />
-            </svg>
-            Filter
+            <div className="relative">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="px-5 py-2.5 me-2 mb-2 text-[#899290] flex items-center gap-2 bg-white border rounded-md"
+              >
+                <svg width="8" height="4" viewBox="0 0 8 4" fill="none">
+                  <path d="M4 4L7.4641 0.25H0.535898L4 4Z" fill="#D9D9D9" />
+                </svg>
+                {selected}
+              </button>
+
+              {isOpen && (
+                <div className="absolute  mt-2 w-40 bg-white border rounded-md shadow-lg z-[9999]">
+                  {options.map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => {
+                        setSelected(option);
+                        setIsOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           <div className="relative">
             <button
@@ -127,7 +182,7 @@ const SuratMasuk = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredJenisMails?.map((mail: Mail, index: number) => (
+              {filteredMails?.map((mail: Mail, index: number) => (
                 <tr
                   key={mail.id}
                   className="bg-white border-b border-[#8F8F8F]"
@@ -148,7 +203,7 @@ const SuratMasuk = () => {
                     {mail.file ? (
                       <a
                         href={`${BASE_FILE_URL}${mail.file}`}
-                        target="_blank"
+                        target="blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:underline"
                       >
@@ -175,23 +230,38 @@ const SuratMasuk = () => {
                     )}
                   </td>
                   <td className="px-6 py-3">
-                    <Link to={`/dvpersuratan/editsurat/${mail.id}`}>
+                    {mail.accept && mail.tujuan ? (
                       <button
+                        onClick={() => {
+                          // TODO: Tambahkan fungsi kirim ke tujuan di sini
+                          alert(`Surat dikirim ke: ${mail.tujuan}`);
+                        }}
                         type="button"
-                        className="text-white bg-[#0DC300] hover:bg-[#7dc878] rounded-lg text-sm px-5 py-2.5 me-1 mb-2"
+                        className="text-white bg-blue-600 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-1 mb-2"
                       >
-                        Edit Data
+                        Kirim ke {mail.tujuan}
                       </button>
-                    </Link>
-                    <br />
-                    <button
-                      onClick={() => handleDelete(mail.id)}
-                      disabled={isPending}
-                      type="button"
-                      className="text-white bg-red-700 hover:bg-red-800 rounded-lg text-sm px-5 py-2.5 me-1 mb-2"
-                    >
-                      {isPending ? "Menghapus..." : "Hapus"}
-                    </button>
+                    ) : (
+                      <>
+                        <Link to={`/dvpersuratan/editsurat/${mail.id}`}>
+                          <button
+                            type="button"
+                            className="text-white bg-[#0DC300] hover:bg-[#7dc878] rounded-lg text-sm px-5 py-2.5 me-1 mb-2"
+                          >
+                            Edit Data
+                          </button>
+                        </Link>
+                        <br />
+                        <button
+                          onClick={() => handleDelete(mail.id)}
+                          disabled={isPending}
+                          type="button"
+                          className="text-white bg-red-700 hover:bg-red-800 rounded-lg text-sm px-5 py-2.5 me-1 mb-2"
+                        >
+                          {isPending ? "Menghapus..." : "Hapus"}
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

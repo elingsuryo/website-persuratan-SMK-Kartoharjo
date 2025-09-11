@@ -19,7 +19,7 @@ const listKontak: FC = () => {
       <main className="flex-1 overflow-auto p-4 sm:ml-64">
         <header className="flex mb-6 border-b w-full">
           <div className="flex items-center justify-between w-full px-8 py-4">
-            <h1 className="text-2xl font-bold font-poppins">Kirim Surat</h1>
+            <h1 className="text-2xl font-bold font-poppins">List Kontak</h1>
             <div className="flex items-center gap-3 font-poppins font-semibold">
               <span>Divisi Surat</span>
               {/* <img
@@ -63,45 +63,6 @@ const listKontak: FC = () => {
           </div>
         </header>
 
-        <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
-          <div className="px-5 py-2.5 me-2 mb-2 text-[#899290] flex items-center gap-2">
-            <svg
-              width="8"
-              height="4"
-              viewBox="0 0 8 4"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M4 4L7.4641 0.25H0.535898L4 4Z" fill="#D9D9D9" />
-            </svg>
-            Filter
-          </div>
-          <div className="relative">
-            <button
-              type="button"
-              className="focus:outline-none flex items-center gap-2 text-white bg-[#0DC300] focus:ring-4 focus:ring-red-300 font-small rounded-[5px] text-sm px-5 py-2.5 me-2 mb-2 dark:bg-[#0DC300] dark:hover:bg-[#0DC300] dark:focus:ring-[#0DC300]"
-            >
-              <div>
-                <svg
-                  width="21"
-                  height="21"
-                  viewBox="0 0 21 21"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10.5 4.375V16.625M4.375 10.5H16.625"
-                    stroke="white"
-                    stroke-width="4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </div>
-              <Link to="/admin/tambah-user">Tambah Data</Link>
-            </button>
-          </div>
-        </div>
         <div className="relative overflow-x-auto sm:rounded-lg drop-shadow-2xl backdrop-blur-3xl">
           <table className="w-full text-sm text-left rtl:text-right">
             <thead className="text-xs text-bold uppercase bg-[#D9E8FF] backdrop-blur-2xl drop-shadow-md">

@@ -103,6 +103,12 @@ func PrivateRoutes(userHandler handler.UserHandler, mailHandler handler.MailHand
 		},
 		{
 			Method: http.MethodPut,
+			Path: "/mails/send/:id",
+			Handler: mailHandler.SendMail,
+			Roles: headmasterOnly,
+		},
+		{
+			Method: http.MethodPut,
 			Path: "/mails/reject/:id",
 			Handler: mailHandler.RejectMail,
 			Roles: headmasterOnly,

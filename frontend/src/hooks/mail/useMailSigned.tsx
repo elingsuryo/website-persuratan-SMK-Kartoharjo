@@ -2,13 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Api from "../../services/api";
 import Cookies from "js-cookie";
 
-interface MailSigned {
-  id: number;
-  file: string;
-  tujuan: string;
-  accept: boolean;
-}
-
 export const useMailSigned = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -19,7 +12,7 @@ export const useMailSigned = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      return response.data as MailSigned;
+      return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mails"] });
