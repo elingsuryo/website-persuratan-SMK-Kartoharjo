@@ -35,7 +35,7 @@ const suratKeluar = () => {
   };
 
   const filteredMails = mails
-    ?.filter((mail: Mail) => mail.jenis.toLowerCase() === "surat masuk")
+    ?.filter((mail: Mail) => mail.jenis.toLowerCase() === "surat keluar")
     .filter((mail: Mail) =>
       mail.judul.toLowerCase().includes(search.toLowerCase())
     )

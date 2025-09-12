@@ -28,6 +28,8 @@ import KelolaUser from "../views/admin/user.tsx";
 
 import SuratMasukKS from "../views/headmaster/suratMasuk.tsx";
 
+import SuratKeluarKS from "../views/headmaster/suratKeluar.tsx";
+
 import SuratMasukDV from "../views/dvpersuratan/suratMasuk.tsx";
 
 import SuratKeluarDV from "../views/dvpersuratan/suratKeluar.tsx";
@@ -109,6 +111,10 @@ export default function AppRoutes() {
       <Route
         path="/kepalasekolah/suratmasuk"
         element={isAuthenticated ? <SuratMasukKS /> : <LoginRoute />}
+      />
+      <Route
+        path="/kepalasekolah/suratkeluar"
+        element={isAuthenticated ? <SuratKeluarKS /> : <LoginRoute />}
       />
 
       {/* route dvpersuratan */}
