@@ -13,7 +13,7 @@ import Cookies from "js-cookie";
 //import context
 import { AuthContext } from "../../context/AuthContext";
 
-import bg1 from "../../assets/bg1.png";
+import bg1 from "../../assets/background.png";
 
 //interface for validation errors
 interface ValidationErrors {

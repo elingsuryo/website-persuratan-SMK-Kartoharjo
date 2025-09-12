@@ -9,7 +9,7 @@ import { useRegister } from "../../hooks/auth/useRegister";
 
 import "../../index.css";
 
-import bg1 from "../../assets/bg1.png";
+import bg1 from "../../assets/background.png";
 import { AuthContext } from "../../context/AuthContext";
 
 //interface for validation errors

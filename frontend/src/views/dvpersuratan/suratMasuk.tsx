@@ -233,8 +233,7 @@ const SuratMasuk = () => {
                     {mail.accept && mail.tujuan ? (
                       <button
                         onClick={() => {
-                          // TODO: Tambahkan fungsi kirim ke tujuan di sini
-                          alert(`Surat dikirim ke: ${mail.tujuan}`);
+                          window.location.href = "/dvpersuratan/listkontak";
                         }}
                         type="button"
                         className="text-white bg-blue-600 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-1 mb-2"
